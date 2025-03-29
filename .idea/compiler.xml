@@ -6,11 +6,6 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="oplayer-pojo" />
-        <module name="oplayer-common" />
-        <module name="oplayer-controller" />
-        <module name="oplayer-service" />
-        <module name="oplayer-dao" />
       </profile>
       <profile name="Annotation profile for oplayer-parent" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
@@ -19,9 +14,17 @@
         <processorPath useClasspath="false">
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.36/lombok-1.18.36.jar" />
         </processorPath>
-        <module name="app" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="app" target="21" />
+      <module name="oplayer-common" target="17" />
+      <module name="oplayer-controller" target="17" />
+      <module name="oplayer-dao" target="17" />
+      <module name="oplayer-parent" target="21" />
+      <module name="oplayer-pojo" target="17" />
+      <module name="oplayer-service" target="17" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
