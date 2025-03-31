@@ -1,12 +1,12 @@
 spring:
   application:
-    name: tlias-web
+    name: oplayer
 
   datasource:
-    url: jdbc:mysql://47.108.201.216:3306/tlias
+    url: jdbc:mysql://47.108.201.216 :3306/oplay
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: tlias
-    password: hzzhxp131421
+    username: oplay
+    password: wZajAPBfwhCAdS2W
   servlet:
     multipart:
       max-file-size: 10MB

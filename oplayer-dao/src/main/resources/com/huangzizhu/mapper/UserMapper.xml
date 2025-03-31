@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huangzizhu.mapper.UserMapper">
+    <insert id="insertUser">
+        insert into user (username, hashed_password, salt, email, phone)
+        values (#{username},#{hashedPassword},#{salt},#{email},#{phone})
+    </insert>
+
+    <select id="getAllUser" resultType="com.huangzizhu.pojo.User">
+        select id,username,email,phone,gender,birth_date,avatar_url,description,background,reg_time
+        from user limit #{start},#{count}
+    </select>
+    <select id="countAllUser" resultType="java.lang.Integer">
+        select count(*) from user;
+    </select>
+    <select id="getUser" resultType="com.huangzizhu.pojo.User">
+        select * from user where username = #{username};
+    </select>
+</mapper>

@@ -5,14 +5,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 用户查询参数
+ * 登录结果
  * @Author huangzizhu
  * @Version 1.0
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserQueryParam {
-    private Integer page;
-    private Integer pageSize;
+public class LoginResult {
+    private User user;
+    private String token;
 }

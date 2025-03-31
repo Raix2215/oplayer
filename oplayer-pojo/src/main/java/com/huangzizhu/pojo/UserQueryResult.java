@@ -4,15 +4,17 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 /**
- * 用户查询参数
+ * 用户查询结果
  * @Author huangzizhu
  * @Version 1.0
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserQueryParam {
-    private Integer page;
-    private Integer pageSize;
+public class UserQueryResult {
+    private Integer total;
+    private List<User> list;
 }
