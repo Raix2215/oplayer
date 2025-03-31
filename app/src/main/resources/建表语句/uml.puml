@@ -1,0 +1,113 @@
+```plantuml
+@startuml
+
+entity 用户表 {
+    + 用户ID : int
+    + 用户名 : string
+    + 密码 : string
+    + 邮箱 : string
+    + 手机号码 : string
+    + 性别 : int
+    + 出生日期 : date
+    + 头像URL : string
+    + 个人签名 : string
+    + 个人空间背景图 : string
+    + 注册时间 : datetime
+}
+
+entity 收藏表 {
+    + 收藏ID : int
+    + 用户ID : int
+    + 歌曲ID : int
+    + 更新时间 : datetime
+    + 描述 : string
+    + 封面图片URL : string
+    + 时长 : int
+}
+
+entity 播放历史表 {
+    + 播放历史ID : int
+    + 用户ID : int
+    + 歌曲ID : int
+    + 播放进度 : float
+    + IP地址 : string
+    + 播放模式 : string
+    + 音量设置 : int
+    + 是否暂停 : boolean
+}
+
+entity 歌曲表 {
+    + 歌曲ID : int
+    + 歌曲名称 : string
+    + 歌手/艺术家 : string
+    + 专辑ID : int
+    + 发行年份 : int
+    + 时长 : int
+    + 音频格式 : string
+    + 文件大小 : int
+    + 封面图片URL : string
+    + 比特率 : int
+    + 采样率 : int
+    + 存储路径 : string
+}
+
+entity 歌单表 {
+    + 歌单ID : int
+    + 歌单名称 : string
+    + 创建者ID : int
+    + 创建时间 : datetime
+    + 更新时间 : datetime
+    + 歌单描述 : string
+    + 歌单封面图片URL : string
+    + 歌单时长 : int
+}
+
+entity 专辑表 {
+    + 专辑ID : int
+    + 专辑名称 : string
+}
+
+entity 评论表 {
+    + 评论ID : int
+    + 歌曲ID : int
+    + 用户ID : int
+    + 评论内容 : string
+    + 评论时间 : datetime
+    + 点赞数 : int
+    + 评论IP : string
+}
+
+entity 标签表 {
+    + 标签ID : int
+    + 标签名称 : string
+    + 标签描述 : string
+    + 标签创建时间 : datetime
+    + 标签更新时间 : datetime
+    + 标签状态 : string
+}
+
+entity 管理员表 {
+    + 管理员ID : int
+    + 用户名 : string
+    + 密码 : string
+    + 邮箱 : string
+    + 手机号码 : string
+    + 姓名 : string
+    + 头像URL : string
+}
+
+用户表 --{ 收藏表 : 包含
+用户表 --{ 播放历史表 : 记录
+用户表 --{ 评论表 : 撰写
+用户表 --{ 歌单表 : 创建
+收藏表 }--{ 歌曲表 : 包含
+播放历史表 }--{ 歌曲表 : 记录
+歌曲表 --{ 歌单表 : 包含
+歌曲表 --{ 评论表 : 接收
+歌曲表 --{ 标签表 : 关联
+管理员表 --{ 歌曲审核表 : 审核
+管理员表 --{ 新增标签审核表 : 审核
+管理员表 --{ 歌曲打标签审核表 : 审核
+
+@enduml
+```
