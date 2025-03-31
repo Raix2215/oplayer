@@ -13,8 +13,6 @@ target/
 .springBeans
 .sts4-cache
 
-./app/src/main/resources/application.yum
-
 ### IntelliJ IDEA ###
 .idea
 *.iws
@@ -35,3 +33,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Local Config ###
+*.yum
