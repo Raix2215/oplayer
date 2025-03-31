@@ -82,6 +82,17 @@
                 <artifactId>jjwt</artifactId>
                 <version>0.12.6</version> <!-- 请根据需要选择合适的版本 -->
             </dependency>
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>javax.servlet-api</artifactId>
+                <version>4.0.1</version>
+                <scope>provided</scope> <!-- 服务器通常会提供这个依赖 -->
+            </dependency>
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>2.11.0</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
