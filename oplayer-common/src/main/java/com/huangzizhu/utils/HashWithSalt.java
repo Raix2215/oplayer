@@ -4,6 +4,11 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
+/**
+ * 哈西加盐工具类
+ * @Author huangzizhu
+ * @Version 1.0
+ */
 public class HashWithSalt {
 
     // 生成随机盐值

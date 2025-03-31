@@ -2,6 +2,8 @@ package com.huangzizhu.mapper;
 
 
 import com.huangzizhu.pojo.RegParam;
+import com.huangzizhu.pojo.SimpleUserInfo;
+import com.huangzizhu.pojo.UpdateUserInfoParam;
 import com.huangzizhu.pojo.User;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -22,4 +24,10 @@ public interface UserMapper {
     void insertUser(RegParam param);
 
     User getUser(String username);
+
+    User getUserById(Integer id);
+
+    List<SimpleUserInfo> fuzzySearchUser(String username);
+
+    void updateUser(UpdateUserInfoParam param);
 }
