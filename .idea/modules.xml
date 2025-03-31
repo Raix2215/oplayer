@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/oplayer.iml" filepath="$PROJECT_DIR$/oplayer.iml" />
-      <module fileurl="file://$PROJECT_DIR$/oplayer-controller/oplayer-controller.iml" filepath="$PROJECT_DIR$/oplayer-controller/oplayer-controller.iml" />
     </modules>
   </component>
 </project>
