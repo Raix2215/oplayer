@@ -5,6 +5,15 @@
         insert into user (username, hashed_password, salt, email, phone)
         values (#{username},#{hashedPassword},#{salt},#{email},#{phone})
     </insert>
+    <update id="updateUser">
+        update user
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
 
     <select id="getAllUser" resultType="com.huangzizhu.pojo.User">
         select id,username,email,phone,gender,birth_date,avatar_url,description,background,reg_time
@@ -15,5 +24,11 @@
     </select>
     <select id="getUser" resultType="com.huangzizhu.pojo.User">
         select * from user where username = #{username};
+    </select>
+    <select id="getUserById" resultType="com.huangzizhu.pojo.User">
+        select id,username,email,phone,gender,birth_date,avatar_url,description,background,reg_time from user where id = #{id};
+    </select>
+    <select id="fuzzySearchUser" resultType="com.huangzizhu.pojo.SimpleUserInfo">
+        select id,username from user where username like concat('%',#{username},'%')
     </select>
 </mapper>

@@ -5,7 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
-@ComponentScan(basePackages = {"com.huangzizhu.controller","com.huangzizhu.service"})
+@ComponentScan(basePackages = {"com.huangzizhu.controller","com.huangzizhu.service","com.huangzizhu.pojo"})
 @SpringBootApplication
 @MapperScan("com.huangzizhu.mapper")
 public class AppApplication {

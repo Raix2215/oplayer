@@ -4,10 +4,9 @@ import com.huangzizhu.pojo.*;
 import com.huangzizhu.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 /**
@@ -40,6 +39,27 @@ public class UserController {
         log.info("用户登录 param:{}", param);
         LoginResult data = userService.login(param);
         return Result.success(data);
+    }
+
+    @GetMapping("/{id}")
+    public Result getUserByid(@PathVariable Integer id) {
+        log.info("查询用户 id:{}", id);
+        User data = userService.getUserById(id);
+        return Result.success(data);
+    }
+
+    @GetMapping("/search")
+    public Result fuzzySearchUser(@RequestParam String username) {
+        log.info("查询用户 username:{}", username);
+        List<SimpleUserInfo> data = userService.fuzzySearchUser(username);
+        return Result.success(data);
+    }
+
+    @PutMapping("/update")
+    public Result updateUserInfo(@RequestBody UpdateUserInfoParam param) {
+        log.info("更新用户信息 param:{}", param);
+        userService.updateUserInfo(param);
+        return Result.success();
     }
 
 }
