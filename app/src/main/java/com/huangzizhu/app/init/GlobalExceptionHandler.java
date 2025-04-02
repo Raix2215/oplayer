@@ -1,9 +1,10 @@
-package com.huangzizhu.pojo;
+package com.huangzizhu.app;
 
-import com.huangzizhu.exception.DuplicateValueException;
-import com.huangzizhu.exception.PasswordErrorException;
-import com.huangzizhu.exception.UserNotFoundException;
+import com.huangzizhu.exception.*;
+import com.huangzizhu.pojo.Result;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -18,6 +19,9 @@ import java.util.regex.Pattern;
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
+
+    @Autowired
+    private ApplicationContext applicationContext;
 
     @ExceptionHandler
     public Result handleException(Exception e) {
@@ -41,6 +45,19 @@ public class GlobalExceptionHandler {
         log.error("登陆信息错误异常", e);
         return Result.error(e.getMessage());
     }
+
+    @ExceptionHandler
+    public Result handleException(PermissionDenyException e) {
+        log.error("权限错误异常", e);
+        return Result.error(e.getMessage());
+    }
+
+    @ExceptionHandler
+    public void handleException(InitException e) {
+        log.error("初始化异常", e);
+        System.exit(-1);
+    }
+
 
     private String extractValue(String message,String regex,int index) {
         Pattern pattern = Pattern.compile(regex);
