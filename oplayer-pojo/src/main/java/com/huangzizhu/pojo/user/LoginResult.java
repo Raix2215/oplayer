@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class LoginResult {
-    private User user;
+public class LoginResult<T> {
+    private T info;
     private String token;
 }
