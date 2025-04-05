@@ -25,4 +25,6 @@ public class PlayHistory {
     private Integer volume;
     private Integer isPaused;
     private LocalDateTime playTime;
+    private Integer listId;
+    private Integer listType;
 }

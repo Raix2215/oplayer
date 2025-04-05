@@ -1,4 +1,4 @@
 package com.huangzizhu.pojo;
 
-public class AdminAddParam {
+public class QueryForm {
 }

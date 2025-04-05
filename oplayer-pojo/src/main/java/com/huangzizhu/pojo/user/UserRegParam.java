@@ -5,16 +5,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 登录参数
+ * 注册参数
  * @Author huangzizhu
  * @Version 1.0
  */
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
-public class LoginParam {
-    private String username;
-    private String hashedPassword;
+public class UserRegParam extends User{
     private String ip;
-    private String salt;
 }
