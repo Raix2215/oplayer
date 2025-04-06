@@ -1,4 +1,4 @@
-package com.huangzizhu.util;
+package com.huangzizhu.utils;
 
 import com.aliyun.oss.ClientBuilderConfiguration;
 import com.aliyun.oss.OSS;
@@ -8,10 +8,11 @@ import com.aliyun.oss.common.auth.CredentialsProviderFactory;
 import com.aliyun.oss.common.auth.EnvironmentVariableCredentialsProvider;
 import com.aliyun.oss.common.comm.SignVersion;
 import com.aliyuncs.exceptions.ClientException;
-import com.huangzizhu.pojo.AliyunOSSProperties;
+import com.huangzizhu.pojo.config.AliyunOSSProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 import java.io.ByteArrayInputStream;
 import java.time.YearMonth;
 import java.util.UUID;
@@ -22,7 +23,6 @@ import java.util.UUID;
 public class AliOSSOperator {
     @Autowired
     private AliyunOSSProperties aliyunOSSProperties;
-
     public String uploadFile(byte[] fileBytes , String filename) throws ClientException {
         String endpoint = aliyunOSSProperties.getEndpoint();
         String bucketName = aliyunOSSProperties.getBucketName();

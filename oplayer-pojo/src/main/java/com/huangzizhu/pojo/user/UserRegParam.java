@@ -1,4 +1,4 @@
-package com.huangzizhu.pojo;
+package com.huangzizhu.pojo.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserRegParam extends User{
+public class UserRegParam extends User {
     private String ip;
 }

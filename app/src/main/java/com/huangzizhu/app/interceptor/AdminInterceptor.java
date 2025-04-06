@@ -1,9 +1,9 @@
-package com.huangzizhu.interceptor;
+package com.huangzizhu.app.interceptor;
 
+import com.huangzizhu.exception.PermissionDenyException;
 import com.huangzizhu.exception.UserNotFoundException;
 import com.huangzizhu.mapper.AdminMapper;
-import com.huangzizhu.pojo.Admin;
-import com.huangzizhu.utils.CurrentHolder;
+import com.huangzizhu.pojo.user.Admin;
 import com.huangzizhu.utils.JWTUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -62,11 +62,15 @@ public class AdminInterceptor implements HandlerInterceptor {
                 else{
                     log.info("id:{},username:{},非管理员，拦截",id,username);
                     response.setStatus(401);
-                    return false;
+                    throw new PermissionDenyException("非管理员,权限不足");
                 }
 //                CurrentHolder.setCurrentId(id);
 //                CurrentHolder.setCurrentName(username);
-            }catch (Exception e){
+            }catch (PermissionDenyException e){
+                //管理员错误继续向上抛，与token异常区分
+                throw e;
+            }
+            catch (Exception e){
                 log.info("token校验失败，拦截");
                 response.setStatus(401);
                 return false;

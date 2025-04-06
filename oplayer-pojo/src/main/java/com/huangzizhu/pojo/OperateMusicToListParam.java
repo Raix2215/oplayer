@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class OpeaMusicToListParam {
+public class OperateMusicToListParam {
     private Integer songId;
     private Integer listId;
     private Integer userId;

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huangzizhu.mapper.CollectionMapper">
+    <insert id="addMusic">
+        insert into collection_song (collection_id, song_id,collection_time)
+        values (#{collectionId}, #{songId}, now())
+    </insert>
+    <update id="updateCollectionDuration" >
+        UPDATE collection
+        SET update_time = now(),
+            duration = CASE
+                           WHEN (#{duration} * #{rate} >= 0) THEN duration + #{duration} * #{rate}
+                           WHEN (duration >= ABS(#{duration} * #{rate})) THEN duration + #{duration} * #{rate}
+                           ELSE 0
+                END
+        WHERE id = #{collectionId}
+    </update>
+    <update id="updateCollection">
+        update collection
+        <set>
+            <if test="description != null">
+                description = #{description},
+            </if>
+            <if test="coverUrl != null">
+                cover_url = #{coverUrl},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+    <delete id="deleteMusic">
+        delete from collection_song
+        where collection_id = #{collectionId} and song_id = #{songId}
+    </delete>
+    <select id="getId" resultType="integer">
+        select id from collection where user_id = #{userId};
+    </select>
+    <select id="getCollection" resultType="com.huangzizhu.pojo.collection.Collection">
+        select * from collection where user_id = #{userId}
+    </select>
+    <select id="getSongs" resultType="com.huangzizhu.pojo.Song">
+        select s.id, name, artist, album_id, album_name, year, duration, format, size, cover_url, bit_rate, sample_rate, md5, is_available
+        from song s join collection_song cs on s.id = cs.song_id
+        where cs.collection_id = #{collectionId}
+        order by cs.collection_time desc
+    </select>
+</mapper>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huangzizhu.mapper.PlayListMapper">
+    <insert id="createPlayList">
+        insert into playlist
+            (name, creator_id ,create_time, update_time,description,cover_url,total_duration,total)
+        values
+        (#{name}, #{creatorId},#{createTime},#{updateTime}, #{description}, #{coverUrl}, #{totalDuration},#{total})
+    </insert>
+    <insert id="addMusic">
+        insert into playlist_song (playlist_id, song_id, add_time)
+        values (#{listId}, #{songId}, #{addTime})
+    </insert>
+    <update id="updatePlayListCount">
+        update playlist
+        set total = #{total},
+            total_duration = #{totalDuration}
+        where id = #{id}
+    </update>
+    <update id="updatePlayList">
+        update playlist
+        set name = #{name},
+            description = #{description},
+            cover_url = #{coverUrl},
+            update_time = #{updateTime}
+        where id = #{id}
+    </update>
+    <delete id="deleteMusic">
+        delete from playlist_song
+        where playlist_id = #{listId} and song_id = #{songId}
+    </delete>
+    <delete id="deleteAllMusic">
+        delete from playlist_song
+        where playlist_id = #{id}
+    </delete>
+    <delete id="deletePlayList">
+        delete from playlist
+        where id = #{id}
+    </delete>
+    <select id="getAllPlayListCount" resultType="java.lang.Integer">
+        select count(*) from playlist where creator_id = #{userId}
+    </select>
+    <select id="getAllPlayList" resultType="com.huangzizhu.pojo.playList.Playlist">
+        select id, name, creator_id, create_time, update_time, description, cover_url, total_duration,total
+        from playlist
+        where creator_id = #{userId}
+        order by update_time desc
+        limit #{start}, #{pageSize}
+    </select>
+    <select id="getPlayList" resultType="com.huangzizhu.pojo.playList.Playlist">
+        select * from playlist where id = #{id}
+    </select>
+    <select id="getAllMusicCount" resultType="java.lang.Integer">
+        select count(*) from playlist_song where playlist_id = #{listId}
+    </select>
+    <select id="getAllMusic" resultType="com.huangzizhu.pojo.Song">
+        select s.id, name, artist, album_id, album_name, year, duration, format, size, cover_url, bit_rate, sample_rate, md5, is_available
+        from song s join playlist_song ps on s.id = ps.song_id
+        where ps.playlist_id = #{playListId}
+        order by ps.add_time desc
+        limit #{start}, #{pageSize}
+    </select>
+</mapper>

@@ -1,6 +1,7 @@
 package com.huangzizhu.controller;
 
 import com.huangzizhu.pojo.*;
+import com.huangzizhu.pojo.user.*;
 import com.huangzizhu.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,11 +26,11 @@ public class UserController {
     @PostMapping("/all")
     public Result getUser(@RequestBody UserQueryParam param) {
         log.info("查询所有用户 param:{}", param);
-        UserQueryResult data = userService.getAllUser(param);
+        QueryResult<User> data = userService.getAllUser(param);
         return Result.success(data);
     }
     @PostMapping("/reg")
-    public Result regUser(@RequestBody RegParam param) {
+    public Result regUser(@RequestBody UserRegParam param) {
         log.info("注册用户 param:{}", param);
         userService.regUser(param);
         return Result.success();
@@ -37,7 +38,7 @@ public class UserController {
     @PostMapping("/login")
     public Result login(@RequestBody LoginParam param) {
         log.info("用户登录 param:{}", param);
-        LoginResult data = userService.login(param);
+        LoginResult<User> data = userService.login(param);
         return Result.success(data);
     }
 
@@ -59,6 +60,20 @@ public class UserController {
     public Result updateUserInfo(@RequestBody UpdateUserInfoParam param) {
         log.info("更新用户信息 param:{}", param);
         userService.updateUserInfo(param);
+        return Result.success();
+    }
+
+    @DeleteMapping("/{id}")
+    public Result deleteUser(@PathVariable Integer id) {
+        log.info("删除用户 id:{}", id);
+        userService.deleteUser(id);
+        return Result.success();
+    }
+
+    @PutMapping("/update/password")
+    public Result updatePassword(@RequestBody LoginParam param) {
+        log.info("更新用户密码 param:{}", param);
+        userService.updatePassword(param);
         return Result.success();
     }
 

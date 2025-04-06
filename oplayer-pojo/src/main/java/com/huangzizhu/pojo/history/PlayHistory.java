@@ -1,4 +1,4 @@
-package com.huangzizhu.pojo;
+package com.huangzizhu.pojo.history;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

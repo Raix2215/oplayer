@@ -1,4 +1,4 @@
-package com.huangzizhu.pojo;
+package com.huangzizhu.pojo.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Admin extends PasswordAndSalt{
+public class Admin extends PasswordAndSalt {
     private Integer id; // 管理员ID（唯一标识）
     private String username; // 用户名
     private String email; // 邮箱

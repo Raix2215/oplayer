@@ -1,4 +1,4 @@
-package com.huangzizhu.pojo;
+package com.huangzizhu.pojo.music;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

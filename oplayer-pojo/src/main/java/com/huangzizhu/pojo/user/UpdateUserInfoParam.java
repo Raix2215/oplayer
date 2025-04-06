@@ -1,11 +1,10 @@
-package com.huangzizhu.pojo;
+package com.huangzizhu.pojo.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 /**
  * 更新用户信息表单

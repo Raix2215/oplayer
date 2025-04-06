@@ -1,14 +1,13 @@
 package com.huangzizhu.utils;
 
-import com.huangzizhu.pojo.FileWatcherProperties;
-import com.huangzizhu.pojo.MusicFileFeature;
-import lombok.Data;
+import com.huangzizhu.exception.MusicParseException;
+import com.huangzizhu.pojo.config.FileWatcherProperties;
+import com.huangzizhu.pojo.music.MusicFileFeature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -16,42 +15,60 @@ import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashSet;
-import java.util.Set;
 
-@Data
 @Component
 public class MusicFeatureReader {
 
     @Autowired
     private FileWatcherProperties fileWatcherProperties;
-    private Set<MusicFileFeature> localMusic = new HashSet<>();
-    private Path folder = Paths.get(System.getProperty("user.dir"), fileWatcherProperties.getDirectory());
+    private HashSet<MusicFileFeature> localMusic = new HashSet<>();
 
-    public  void T(String[] args) throws IOException {
-        // 指定要扫描的文件夹路径
+    public HashSet<MusicFileFeature> getLocalMusicData() throws IOException {
+        Path folder = Paths.get(System.getProperty("user.dir"), fileWatcherProperties.getDirectory());
         // 遍历文件夹
         Files.walk(folder)
                 .filter(Files::isRegularFile) // 确保是文件
-                .filter(path -> path.toString().endsWith(".mp3") || path.toString().endsWith(".wav")) // 过滤.mp3和.wav文件
+                .filter(path -> CommonUtils.isSupportedFormat(path.toString())) // 过滤文件
                 .forEach(path -> {
                     try {
-                        // 获取文件名和路径
-                        String fileName = path.getFileName().toString();
-                        String filePath = path.toAbsolutePath().toString();
-                        // 计算MD5
-                        String md5 = calculateMD5(path.toFile());
-                        // 创建MusicFileFeature对象并加入HashSet
-                        localMusic.add(new MusicFileFeature(fileName, filePath, md5));
+                        addFileData(path);
                     } catch (IOException | NoSuchAlgorithmException e) {
                         e.printStackTrace();
                     }
                 });
+        return localMusic;
+    }
+    public MusicFileFeature getMusicFileFeature(File file) {
+        // 获取文件名和路径
+        String fileName = file.getName();
+        if(CommonUtils.isSupportedFormat(fileName)) {
+            // 过滤.mp3和.wav文件
+            String absolutePath = file.getAbsolutePath();
+            // 计算MD5
+            String md5 = null;
+            try {
+                md5 = calculateMD5(file);
+            } catch (Exception e) {
+                throw new MusicParseException("文件解析失败",file, e);
+            }
+            return new MusicFileFeature(fileName, absolutePath, md5);
+        } else {
+            return null;
+        }
+    }
 
-
+    private void addFileData(Path path) throws NoSuchAlgorithmException, IOException {
+        // 获取文件名和路径
+        String fileName = path.getFileName().toString();
+        String filePath = path.toAbsolutePath().toString();
+        // 计算MD5
+        String md5 = calculateMD5(path.toFile());
+        // 创建MusicFileFeature对象并加入HashSet
+        localMusic.add(new MusicFileFeature(fileName, filePath, md5));
     }
 
     // 计算文件的MD5值
-    private static String calculateMD5(File file) throws NoSuchAlgorithmException, IOException {
+    public static String calculateMD5(File file) throws NoSuchAlgorithmException, IOException {
         MessageDigest digest = MessageDigest.getInstance("MD5");
         try (FileInputStream fis = new FileInputStream(file)) {
             byte[] buffer = new byte[8192];

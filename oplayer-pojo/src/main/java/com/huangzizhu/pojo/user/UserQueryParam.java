@@ -1,5 +1,6 @@
-package com.huangzizhu.pojo;
+package com.huangzizhu.pojo.user;
 
+import com.huangzizhu.pojo.QueryForm;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,9 +11,6 @@ import lombok.NoArgsConstructor;
  * @Version 1.0
  */
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class UserQueryParam {
-    private Integer page;
-    private Integer pageSize;
+public class UserQueryParam extends QueryForm {
+
 }

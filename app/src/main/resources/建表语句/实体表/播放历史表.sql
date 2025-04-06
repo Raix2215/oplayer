@@ -8,7 +8,10 @@ CREATE TABLE `play_history` (
                                 `volume` TINYINT UNSIGNED NULL DEFAULT 50 COMMENT '音量设置（百分比）',
                                 `is_paused` TINYINT UNSIGNED NULL DEFAULT 0 COMMENT '是否暂停（0未暂停，1已暂停）',
                                 `play_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '播放时间',
+                                `list_id` BIGINT UNSIGNED NULL COMMENT '列表ID(也可能是收藏)',
+                                `list_type` TINYINT UNSIGNED NULL DEFAULT 1 COMMENT '列表类型（0表示收藏，1表示歌单，2两者皆非）',
                                 PRIMARY KEY (`id`),
+                                key `idx_play_time` (`play_time`),
                                 KEY `idx_user_id` (`user_id`),
                                 KEY `idx_song_id` (`song_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='播放历史表';

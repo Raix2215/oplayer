@@ -1,6 +1,7 @@
 package com.huangzizhu.service;
 
 import com.huangzizhu.pojo.*;
+import com.huangzizhu.pojo.user.*;
 
 import java.util.List;
 
@@ -10,15 +11,19 @@ import java.util.List;
  * @Version 1.0
  */
 public interface UserService {
-    UserQueryResult getAllUser(UserQueryParam param);
+    QueryResult<User> getAllUser(UserQueryParam param);
 
-    void regUser(RegParam param);
+    void regUser(UserRegParam param);
 
-    LoginResult login(LoginParam param);
+    LoginResult<User> login(LoginParam param);
 
     User getUserById(Integer id);
 
     List<SimpleUserInfo> fuzzySearchUser(String username);
 
     void updateUserInfo(UpdateUserInfoParam param);
+
+    void deleteUser(Integer id);
+
+    void updatePassword(LoginParam param);
 }

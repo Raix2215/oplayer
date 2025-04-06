@@ -1,4 +1,4 @@
 package com.huangzizhu.service;
 
-public class AlbumService {
+public interface AlbumService {
 }

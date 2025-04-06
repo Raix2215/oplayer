@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huangzizhu.mapper.AdminMapper">
+
+    <insert id="addAdmin">
+        insert into admin (username, hashed_password, salt, email, phone)
+        values (#{username},#{hashedPassword},#{salt},#{email},#{phone})
+    </insert>
+    <select id="getAdmin" resultType="com.huangzizhu.pojo.user.Admin">
+        select * from admin where username=#{username}
+    </select>
+    <select id="checkAdmin" resultType="com.huangzizhu.pojo.user.Admin">
+        select * from admin where username=#{username} and id=#{id}
+    </select>
+    <select id="count" resultType="java.lang.Integer">
+        select count(*) from admin
+    </select>
+    <select id="getAllAdmin" resultType="com.huangzizhu.pojo.user.Admin">
+        select id,username,email,phone,name,avatar_url from admin
+    </select>
+</mapper>

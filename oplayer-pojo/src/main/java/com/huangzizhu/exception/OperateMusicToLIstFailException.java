@@ -1,8 +1,8 @@
 package com.huangzizhu.exception;
 
-public class AddMusicToLIstFailException extends RuntimeException {
-    public AddMusicToLIstFailException(String message) {
+public class OperateMusicToLIstFailException extends RuntimeException {
+    public OperateMusicToLIstFailException(String message) {
         super(message);
     }
-    public AddMusicToLIstFailException(String message, Throwable cause) {super(message, cause);}
+    public OperateMusicToLIstFailException(String message, Throwable cause) {super(message, cause);}
 }

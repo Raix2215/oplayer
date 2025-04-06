@@ -14,7 +14,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserQueryResult {
+public class QueryResult<T> {
     private Integer total;
-    private List<User> list;
+    private List<T> list;
 }
