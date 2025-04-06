@@ -57,7 +57,7 @@ public class UserServiceImpl implements UserService {
         }
         try {
             //为用户创建收藏
-            Collection collection = new Collection(null, param.getId(), LocalDateTime.now(), null, null, 0,null,null);
+            Collection collection = new Collection(null, param.getId(), LocalDateTime.now(), null, null, 0,0);
             collectionMapper.addCollection(collection);
             //将用户行为信息插入数据库
             userMapper.addUserBehavior(new UserBehavior(null,param.getId(),collection.getId(),0,0,null));

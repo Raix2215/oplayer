@@ -5,35 +5,23 @@
         insert into collection_song (collection_id, song_id,collection_time)
         values (#{collectionId}, #{songId}, now())
     </insert>
-    <update id="updateCollectionDuration" >
-        UPDATE collection
-        SET update_time = now(),
-            duration = CASE
-                           WHEN (#{duration} * #{rate} >= 0) THEN duration + #{duration} * #{rate}
-                           WHEN (duration >= ABS(#{duration} * #{rate})) THEN duration + #{duration} * #{rate}
-                           ELSE 0
-                END
-        WHERE id = #{collectionId}
-    </update>
     <update id="updateCollection">
         update collection
-        <set>
-            <if test="description != null">
-                description = #{description},
-            </if>
-            <if test="coverUrl != null">
-                cover_url = #{coverUrl},
-            </if>
-        </set>
+        set description = #{description},
+            cover_url = #{coverUrl},
+            update_time = #{updateTime}
+        where id = #{id}
+    </update>
+    <update id="updateCollectionInfo">
+        update collection set
+            total = #{total},
+            duration = #{duration}
         where id = #{id}
     </update>
     <delete id="deleteMusic">
         delete from collection_song
         where collection_id = #{collectionId} and song_id = #{songId}
     </delete>
-    <select id="getId" resultType="integer">
-        select id from collection where user_id = #{userId};
-    </select>
     <select id="getCollection" resultType="com.huangzizhu.pojo.collection.Collection">
         select * from collection where user_id = #{userId}
     </select>

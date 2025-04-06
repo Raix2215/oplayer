@@ -1,8 +1,11 @@
 package com.huangzizhu.controller;
 
 import com.huangzizhu.pojo.OperateMusicToListParam;
+import com.huangzizhu.pojo.QueryResult;
+import com.huangzizhu.pojo.Song;
 import com.huangzizhu.pojo.collection.Collection;
 import com.huangzizhu.pojo.Result;
+import com.huangzizhu.pojo.collection.CollectionQueryForm;
 import com.huangzizhu.pojo.collection.UpdateCollectionParam;
 import com.huangzizhu.service.CollectionService;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +19,7 @@ public class CollectionController {
     @Autowired
     private CollectionService collectionService;
 
-    @PostMapping("/addMusic")
+    @PostMapping("/music")
     public Result addMusic(@RequestBody OperateMusicToListParam param) {
         log.info("添加歌曲至收藏: {}", param);
         collectionService.addMusic(param);
@@ -28,7 +31,7 @@ public class CollectionController {
         Collection data = collectionService.getCollection(id);
         return Result.success(data);
     }
-    @DeleteMapping("/deleteMusic")
+    @DeleteMapping("/music")
     public Result deleteMusic(@RequestBody OperateMusicToListParam param) {
         log.info("删除收藏列表中的歌曲: {}", param);
         collectionService.deleteMusic(param);
@@ -39,5 +42,11 @@ public class CollectionController {
         log.info("更新收藏列表: {}", param);
         collectionService.updateCollection(param);
         return Result.success();
+    }
+    @PostMapping("/music/get")
+    public Result getSongs(@RequestBody CollectionQueryForm param) {
+        log.info("获取收藏列表中的歌曲: {}", param);
+        QueryResult<Song> data = collectionService.getSongs(param);
+        return Result.success(data);
     }
 }
