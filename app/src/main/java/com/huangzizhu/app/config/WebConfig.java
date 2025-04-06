@@ -1,7 +1,8 @@
-package com.huangzizhu.config;
+package com.huangzizhu.app.config;
 
 
-import com.huangzizhu.interceptor.TokenInterceptor;
+import com.huangzizhu.app.interceptor.AdminInterceptor;
+import com.huangzizhu.app.interceptor.UserInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -12,10 +13,13 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebConfig implements WebMvcConfigurer {
 
     @Autowired
-    private TokenInterceptor tokenInterceptor;
+    private AdminInterceptor adminInterceptor;
+    @Autowired
+    private UserInterceptor userInterceptor;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(tokenInterceptor).addPathPatterns("/**");
+        registry.addInterceptor(adminInterceptor).addPathPatterns("/**");
+        registry.addInterceptor(userInterceptor).addPathPatterns("/**");
     }
 }

@@ -5,7 +5,8 @@ CREATE TABLE `playlist` (
                             `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
                             `update_time` DATETIME NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
                             `description` VARCHAR(255) NULL DEFAULT '' COMMENT '歌单描述',
-                            `cover_url` VARCHAR(255) NULL DEFAULT '' COMMENT '歌单封面图片URL',
+                            `cover_url` VARCHAR(255) NULL COMMENT '歌单封面图片URL',
+                            `total` INT UNSIGNED NULL DEFAULT 0 COMMENT '歌单歌曲数量',
                             `total_duration` INT UNSIGNED NULL DEFAULT 0 COMMENT '歌单时长（总时长，秒）',
                             PRIMARY KEY (`id`),
                             KEY `idx_creator_id` (`creator_id`)

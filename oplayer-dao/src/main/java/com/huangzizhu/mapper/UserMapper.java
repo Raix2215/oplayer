@@ -1,12 +1,10 @@
 package com.huangzizhu.mapper;
 
 
-import com.huangzizhu.pojo.RegParam;
-import com.huangzizhu.pojo.SimpleUserInfo;
-import com.huangzizhu.pojo.UpdateUserInfoParam;
-import com.huangzizhu.pojo.User;
+import com.huangzizhu.pojo.user.*;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -21,7 +19,7 @@ public interface UserMapper {
 
     Integer countAllUser();
 
-    void insertUser(RegParam param);
+    void insertUser(UserRegParam param);
 
     User getUser(String username);
 
@@ -30,4 +28,12 @@ public interface UserMapper {
     List<SimpleUserInfo> fuzzySearchUser(String username);
 
     void updateUser(UpdateUserInfoParam param);
+
+    void deleteUser(Integer id);
+
+    void updatePassword(LoginParam param);
+
+    void addUserBehavior(UserBehavior userBehavior);
+
+    void setLastLoginTime(Integer userId, LocalDateTime lastLoginTime);
 }

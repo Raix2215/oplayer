@@ -1,6 +1,6 @@
-package com.huangzizhu.service;
+package com.huangzizhu.service.musicManagement;
 
-import com.huangzizhu.pojo.MusicFileFeature;
+import com.huangzizhu.pojo.music.MusicFileFeature;
 import com.huangzizhu.utils.CommonUtils;
 import com.huangzizhu.utils.MusicFeatureReader;
 import lombok.extern.slf4j.Slf4j;

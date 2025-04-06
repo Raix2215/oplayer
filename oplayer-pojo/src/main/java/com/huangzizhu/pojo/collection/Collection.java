@@ -1,5 +1,6 @@
-package com.huangzizhu.pojo;
+package com.huangzizhu.pojo.collection;
 
+import com.huangzizhu.pojo.Song;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,5 +23,6 @@ public class Collection {
     private String description; // 描述
     private String coverUrl; // 封面图片URL
     private Integer duration; // 时长（总时长，秒）
+    private Integer total; // 收藏的歌曲总数
     private List<Song> list; // 收藏的歌曲列表
 }

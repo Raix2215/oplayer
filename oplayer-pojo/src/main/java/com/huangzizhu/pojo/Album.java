@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Objects;
+
 /**
  * 专辑实体类
  * @Author: huangzizhu
@@ -13,6 +15,19 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Album {
-   private Long albumId;
+   private Integer albumId;
    private String albumName;
+   private String artist;
+
+   @Override
+   public boolean equals(Object o) {
+      if (o == null || getClass() != o.getClass()) return false;
+      Album album = (Album) o;
+      return Objects.equals(albumName, album.albumName) && Objects.equals(artist, album.artist);
+   }
+
+   @Override
+   public int hashCode() {
+      return Objects.hash(albumName, artist);
+   }
 }

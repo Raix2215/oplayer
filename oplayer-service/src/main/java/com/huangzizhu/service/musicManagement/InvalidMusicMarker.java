@@ -1,6 +1,7 @@
-package com.huangzizhu.service;
+package com.huangzizhu.service.musicManagement;
 
 import com.huangzizhu.exception.MusicDeleteException;
+import com.huangzizhu.service.SongService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

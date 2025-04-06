@@ -1,34 +1,69 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.huangzizhu.mapper.UserMapper">
-    <insert id="insertUser">
+    <insert id="insertUser" useGeneratedKeys="true" keyProperty="id">
         insert into user (username, hashed_password, salt, email, phone)
         values (#{username},#{hashedPassword},#{salt},#{email},#{phone})
+    </insert>
+    <insert id="addUserBehavior">
+        insert into user_behavior (user_id, collection_id, total_play_count,total_play_duration,last_login_time)
+        values (#{userId}, #{collectionId}, #{totalPlayDuration}, #{lastLoginTime}, #{lastLoginTime})
     </insert>
     <update id="updateUser">
         update user
         <set>
-            <if test="name != null and name != ''">
-                name = #{name},
+            <if test="email != null and email != ''">
+                email = #{email},
+            </if>
+            <if test="phone != null and phone != ''">
+                phone = #{phone},
+            </if>
+            <if test="gender != null">
+                gender = #{gender},
+            </if>
+            <if test="birthDate != null">
+                birth_date = #{birthDate},
+            </if>
+            <if test="avatarUrl != null and avatarUrl != ''">
+                avatar_url = #{avatarUrl},
+            </if>
+            <if test="description != null">
+                description = #{description},
+            </if>
+            <if test="background != null">
+                background = #{background}
             </if>
         </set>
         where id = #{id}
     </update>
+    <update id="updatePassword">
+        update user
+        set hashed_password = #{hashedPassword}, salt = #{salt}
+        where id = #{id}
+    </update>
+    <update id="setLastLoginTime">
+        update user_behavior
+        set last_login_time = #{lastLoginTime}
+        where user_id = #{userId}
+    </update>
+    <delete id="deleteUser">
+        delete from user where id = #{id};
+    </delete>
 
-    <select id="getAllUser" resultType="com.huangzizhu.pojo.User">
+    <select id="getAllUser" resultType="com.huangzizhu.pojo.user.User">
         select id,username,email,phone,gender,birth_date,avatar_url,description,background,reg_time
         from user limit #{start},#{count}
     </select>
     <select id="countAllUser" resultType="java.lang.Integer">
         select count(*) from user;
     </select>
-    <select id="getUser" resultType="com.huangzizhu.pojo.User">
+    <select id="getUser" resultType="com.huangzizhu.pojo.user.User">
         select * from user where username = #{username};
     </select>
-    <select id="getUserById" resultType="com.huangzizhu.pojo.User">
+    <select id="getUserById" resultType="com.huangzizhu.pojo.user.User">
         select id,username,email,phone,gender,birth_date,avatar_url,description,background,reg_time from user where id = #{id};
     </select>
-    <select id="fuzzySearchUser" resultType="com.huangzizhu.pojo.SimpleUserInfo">
+    <select id="fuzzySearchUser" resultType="com.huangzizhu.pojo.user.SimpleUserInfo">
         select id,username from user where username like concat('%',#{username},'%')
     </select>
 </mapper>

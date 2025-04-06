@@ -1,8 +1,9 @@
-package com.huangzizhu.service;
+package com.huangzizhu.service.musicManagement;
 
 import com.huangzizhu.exception.MusicParseException;
-import com.huangzizhu.pojo.MusicFileFeature;
+import com.huangzizhu.pojo.music.MusicFileFeature;
 import com.huangzizhu.pojo.Song;
+import com.huangzizhu.service.SongService;
 import com.huangzizhu.utils.MusicFileParser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

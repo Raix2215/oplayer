@@ -1,43 +1,44 @@
-package com.huangzizhu.app.init;
+package com.huangzizhu.utils;
+import com.huangzizhu.exception.InitException;
+import com.huangzizhu.pojo.Song;
+import com.mpatric.mp3agic.*;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
+import java.io.IOException;
 
+@Slf4j
 public class Mp3FileParser {
 
-    public static String readMP3Tags(File file) {
-        StringBuilder tagsInfo = new StringBuilder();
-        try (InputStream inputStream = new FileInputStream(file)) {
-            // 创建 Player 对象，用于读取 MP3 文件
-            Player player = new Player(inputStream);
-            // 获取标签信息
-            Tag tag = player.getTag();
-            if (tag != null) {
-                tagsInfo.append("Title: ").append(tag.getTitle()).append("\n");
-                tagsInfo.append("Artist: ").append(tag.getArtist()).append("\n");
-                tagsInfo.append("Album: ").append(tag.getAlbum()).append("\n");
-                tagsInfo.append("Year: ").append(tag.getYear()).append("\n");
-                tagsInfo.append("Comment: ").append(tag.getComment()).append("\n");
-                tagsInfo.append("Track: ").append(tag.getTrack()).append("\n");
-                tagsInfo.append("Genre: ").append(tag.getGenreDescription()).append("\n");
-            } else {
-                tagsInfo.append("No ID3 tag found in the MP3 file.");
+    public static Song parse(File path) {
+        try {
+            Mp3File mp3file = new Mp3File(path);
+            if (mp3file.hasId3v2Tag()) {
+                return getSong(mp3file);
             }
-        } catch (TagException e) {
-            tagsInfo.append("Error reading tags: ").append(e.getMessage());
-        } catch (JavaLayerException e) {
-            tagsInfo.append("Error processing MP3 file: ").append(e.getMessage());
-        } catch (Exception e) {
-            tagsInfo.append("Error: ").append(e.getMessage());
+        } catch (InvalidDataException | UnsupportedTagException | IOException e) {
+            throw new InitException("解析MP3文件出错", e);
         }
-        return tagsInfo.toString();
+        return null;
     }
 
-    public static void main(String[] args) {
-        // 示例：读取 MP3 文件并打印标签信息
-        String filePath = "path/to/your/mp3file.mp3"; // 替换为你的 MP3 文件路径
-        String tagsInfo = readMP3Tags(filePath);
-        System.out.println(tagsInfo);
+    private static Song getSong(Mp3File mp3file) {
+        ID3v2 id3v2Tag = mp3file.getId3v2Tag();
+        String name = id3v2Tag.getTitle();
+        String artist = id3v2Tag.getArtist();
+        String albumName = id3v2Tag.getAlbum();
+        String year = id3v2Tag.getYear();
+        Integer duration = id3v2Tag.getLength();
+        int bitRate = mp3file.getBitrate();
+        int sampleRate = mp3file.getSampleRate();
+        // 如果有封面图片
+        byte[] imageData = id3v2Tag.getAlbumImage();
+        if (imageData != null) {
+            log.info("有封面图片，大小为：" + imageData.length + " bytes");
+        }
+        return new Song
+                (null, name, artist, null, albumName,
+                        year, duration, null, null, null,
+                        bitRate, sampleRate, null, null, true);
     }
 }

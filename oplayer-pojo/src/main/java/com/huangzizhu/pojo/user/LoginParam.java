@@ -1,4 +1,4 @@
-package com.huangzizhu.pojo;
+package com.huangzizhu.pojo.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class LoginParam extends PasswordAndSalt{
+public class LoginParam extends PasswordAndSalt {
     private Integer id;
     private String username;
     private String ip;
