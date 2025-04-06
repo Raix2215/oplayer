@@ -5,6 +5,7 @@ CREATE TABLE `collection` (
                               `description` TEXT NULL COMMENT '描述',
                               `cover_url` VARCHAR(255) NULL DEFAULT '' COMMENT '封面图片URL',
                               `duration` INT UNSIGNED NULL DEFAULT 0 COMMENT '时长（总时长，秒）',
+                              `total` INT UNSIGNED NULL DEFAULT 0 COMMENT '总数',
                               PRIMARY KEY (`id`),
                               KEY `idx_user_id` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='收藏表';

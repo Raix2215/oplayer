@@ -24,5 +24,4 @@ public class Collection {
     private String coverUrl; // 封面图片URL
     private Integer duration; // 时长（总时长，秒）
     private Integer total; // 收藏的歌曲总数
-    private List<Song> list; // 收藏的歌曲列表
 }

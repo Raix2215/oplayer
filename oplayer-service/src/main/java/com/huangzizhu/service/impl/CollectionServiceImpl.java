@@ -2,14 +2,17 @@ package com.huangzizhu.service.impl;
 
 import com.huangzizhu.exception.OperateMusicToLIstFailException;
 import com.huangzizhu.exception.ParamInvalidException;
-import com.huangzizhu.exception.UserNotFoundException;
+import com.huangzizhu.exception.PlayListException;
 import com.huangzizhu.mapper.CollectionMapper;
 import com.huangzizhu.mapper.SongMapper;
 import com.huangzizhu.pojo.OperateMusicToListParam;
+import com.huangzizhu.pojo.QueryResult;
 import com.huangzizhu.pojo.collection.Collection;
 import com.huangzizhu.pojo.Song;
+import com.huangzizhu.pojo.collection.CollectionQueryForm;
 import com.huangzizhu.pojo.collection.UpdateCollectionParam;
 import com.huangzizhu.service.CollectionService;
+import com.huangzizhu.utils.CommonUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -17,6 +20,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -32,26 +36,17 @@ public class CollectionServiceImpl implements CollectionService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void addMusic(OperateMusicToListParam param) {
-        //根据用户id获取collection表的id
-        Integer collectionId = collectionMapper.getId(param.getUserId());
-        if (collectionId == null) {
-            throw new OperateMusicToLIstFailException("获取collection表的id失败,可能传入的用户id有误");
-        }
-        //根据歌曲id获取歌曲的时长
-        Integer duration = songMapper.getMusicDuration(param.getSongId());
-        if (duration == null){
-            throw new OperateMusicToLIstFailException("传入的歌曲id有误");
-        }
+        Collection collection = checkCollection(param.getUserId());
+        Song song = checkSong(param.getSongId());
         try {
             //添加到关系表
-            collectionMapper.addMusic(collectionId, param.getSongId());
+            collectionMapper.addMusic(collection.getId(),song.getId());
             //更新collection表的信息
-            collectionMapper.updateCollectionDuration(collectionId, duration, 1);
+            collection.setTotal(collection.getTotal()+1);
+            collection.setDuration(collection.getDuration()+song.getDuration());
+            collectionMapper.updateCollectionInfo(collection);
         }catch (DuplicateKeyException e){
             throw new OperateMusicToLIstFailException("歌曲已存在于收藏中",e);
-        }
-        catch (OperateMusicToLIstFailException e){
-            throw e;
         }
         catch (Exception e){
             throw new OperateMusicToLIstFailException("添加歌曲至收藏失败",e);
@@ -60,56 +55,69 @@ public class CollectionServiceImpl implements CollectionService {
 
     @Override
     public Collection getCollection(Integer userId) {
-        //根据collectionId获取收藏列表
-        Collection collection = collectionMapper.getCollection(userId);
-        if (collection == null){
-            throw new UserNotFoundException("获取用户收藏列表失败,可能传入的用户id有误");
-        }
-        List<Song> list = collectionMapper.getSongs(collection.getId());
-        collection.setList(list);
-        collection.setId(null);
-        collection.setTotal(list.size());
-        return collection;
+        return checkCollection(userId);
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void deleteMusic(OperateMusicToListParam param) {
-        //根据用户id获取collection表的id
-        Integer collectionId = collectionMapper.getId(param.getUserId());
-        if (collectionId == null) {
-            throw new OperateMusicToLIstFailException("获取collection表的id失败,可能传入的用户id有误");
-        }
-        //根据歌曲id获取歌曲的时长
-        Integer duration = songMapper.getMusicDuration(param.getSongId());
-        if (duration == null){
-            throw new OperateMusicToLIstFailException("传入的歌曲id有误");
-        }
+        Collection collection = checkCollection(param.getUserId());
+        Song song = checkSong(param.getSongId());
         try {
             //从关系表删除
-            Integer affectedRows = collectionMapper.deleteMusic(collectionId, param.getSongId());
-            if(affectedRows == 0) throw new OperateMusicToLIstFailException("收藏中不存在该歌曲");
+            Integer affectRows = collectionMapper.deleteMusic(collection.getId(), song.getId());
+            if(affectRows == 0){
+                throw new OperateMusicToLIstFailException("歌曲不在收藏列表中");
+            }
             //更新collection表的信息
-            collectionMapper.updateCollectionDuration(collectionId, duration, -1);
-        } catch (OperateMusicToLIstFailException e){
+            collection.setTotal(CommonUtils.max(collection.getTotal()-1,0));
+            collection.setDuration(CommonUtils.max(collection.getDuration()-song.getDuration(),0));
+            collectionMapper.updateCollectionInfo(collection);
+        }catch (OperateMusicToLIstFailException e){
             throw e;
-        }catch (Exception e){
+        } catch (Exception e){
             throw new OperateMusicToLIstFailException("从收藏删除歌曲失败",e);
         }
     }
 
     @Override
     public void updateCollection(UpdateCollectionParam param) {
+        Collection collection = checkCollection(param.getUserId());
         //检查参数
-        if(param.getDescription() == null && param.getCoverUrl() == null){
-            throw new ParamInvalidException("description和coverUrl不能同时为空");
+        if(CommonUtils.isBlank(param.getDescription())){collection.setDescription("");}
+        else collection.setDescription(param.getDescription());
+        if(CommonUtils.isBlank(param.getCoverUrl())) {param.setCoverUrl("");}
+        else collection.setCoverUrl(param.getCoverUrl());
+        collection.setUpdateTime(LocalDateTime.now());
+        try {
+            collectionMapper.updateCollection(collection);
+        } catch (Exception e) {
+            throw new PlayListException("更新收藏列表失败",e);
         }
-        //根据用户id获取collection表的id
-        Integer collectionId = collectionMapper.getId(param.getUserId());
-        if (collectionId == null) {
-            throw new ParamInvalidException("获取collection表的id失败,可能传入的用户id有误");
+    }
+
+    @Override
+    public QueryResult<Song> getSongs(CollectionQueryForm param) {
+        Collection collection = checkCollection(param.getUserId());
+        Integer total = collection.getTotal();
+        List<Song> list = collectionMapper.getSongs(collection.getId());
+        return new QueryResult<>(total,list);
+    }
+
+    private Collection checkCollection(Integer id) {
+        //根据用户id获取collection
+        Collection collection = collectionMapper.getCollection(id);
+        if (collection == null) {
+            throw new ParamInvalidException("用户id无效,可能传入的用户id有误");
         }
-        param.setId(collectionId);
-        collectionMapper.updateCollection(param);
+        return collection;
+    }
+    private Song checkSong(Integer id) {
+        //根据歌曲id获取歌曲
+        Song song = songMapper.getMusicById(id);
+        if (song == null){
+            throw new ParamInvalidException("传入的歌曲id有误");
+        }
+        return song;
     }
 }
