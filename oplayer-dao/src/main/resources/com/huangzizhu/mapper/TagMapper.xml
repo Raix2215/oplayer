@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huangzizhu.mapper.TagMapper">
+    <insert id="addTag">
+        insert into tag (name, category_id, description, update_time, create_time, status)
+        values (#{name}, #{categoryId}, #{description}, #{updateTime}, #{createTime}, #{status});
+    </insert>
+    <update id="updateTag">
+        update tag
+        set name = #{name},
+            category_id = #{categoryId},
+            description = #{description},
+            update_time = #{updateTime},
+            status = #{status}
+        where id = #{id};
+    </update>
+    <delete id="deleteTag">
+        delete from tag
+        where id = #{tagId};
+    </delete>
+
+    <select id="getTagCategory" resultType="com.huangzizhu.pojo.tag.TagCategory">
+        select * from categories;
+    </select>
+    <select id="getTags" resultType="com.huangzizhu.pojo.tag.Tag">
+        select * from tag;
+    </select>
+    <select id="getTagsByCateId" resultType="com.huangzizhu.pojo.tag.Tag">
+        select * from tag where category_id = #{categoryId};
+    </select>
+    <select id="getTagCategoryById" resultType="com.huangzizhu.pojo.tag.TagCategory">
+        select * from categories where id = #{categoryId};
+    </select>
+    <select id="getTag" resultType="com.huangzizhu.pojo.tag.Tag">
+        select * from tag where id = #{tagId};
+    </select>
+    <select id="getTagByTag" resultType="com.huangzizhu.pojo.tag.Tag">
+        select * from tag where category_id = #{categoryId} and name = #{name};
+    </select>
+</mapper>

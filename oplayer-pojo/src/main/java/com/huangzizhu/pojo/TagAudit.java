@@ -1,5 +1,6 @@
 package com.huangzizhu.pojo;
 
+import com.huangzizhu.pojo.tag.Tag;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

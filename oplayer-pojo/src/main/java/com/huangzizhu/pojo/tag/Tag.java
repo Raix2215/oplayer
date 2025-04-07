@@ -1,4 +1,4 @@
-package com.huangzizhu.pojo;
+package com.huangzizhu.pojo.tag;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,7 +15,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Tag {
-    private Long id; // 标签ID（唯一标识）
+    private Integer id; // 标签ID（唯一标识）
+    private Integer categoryId; // 标签分类ID（外键）
     private String name; // 标签名称
     private String description; // 标签描述
     private LocalDateTime createTime; // 标签创建时间
