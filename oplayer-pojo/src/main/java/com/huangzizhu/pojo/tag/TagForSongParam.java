@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class OperateTagAndSongParam {
+public class TagForSongParam {
     private Integer tagId;
     private Integer songId;
     private String ip;

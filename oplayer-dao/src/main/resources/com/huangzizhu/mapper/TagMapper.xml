@@ -5,6 +5,10 @@
         insert into tag (name, category_id, description, update_time, create_time, status)
         values (#{name}, #{categoryId}, #{description}, #{updateTime}, #{createTime}, #{status});
     </insert>
+    <insert id="addTagForSong">
+        insert into song_tag (song_id, tag_id)
+        values (#{songId}, #{tagId})
+    </insert>
     <update id="updateTag">
         update tag
         set name = #{name},
@@ -17,6 +21,9 @@
     <delete id="deleteTag">
         delete from tag
         where id = #{tagId};
+    </delete>
+    <delete id="deleteTagForMusic">
+        delete from song_tag where song_id = #{songId} and tag_id = #{tagId};
     </delete>
 
     <select id="getTagCategory" resultType="com.huangzizhu.pojo.tag.TagCategory">
@@ -36,5 +43,11 @@
     </select>
     <select id="getTagByTag" resultType="com.huangzizhu.pojo.tag.Tag">
         select * from tag where category_id = #{categoryId} and name = #{name};
+    </select>
+    <select id="getTagsBySongId" resultType="com.huangzizhu.pojo.tag.Tag">
+        SELECT t.*
+        FROM tag t
+                 JOIN song_tag st ON t.id = st.tag_id
+        WHERE st.song_id = #{songId}
     </select>
 </mapper>

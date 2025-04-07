@@ -34,4 +34,7 @@ public interface SongService {
 
     List<SimpleMusicInfo> fuzzySearch(String name);
 
+    QueryResult<Song> getMusicByTagId(MusicQueryForm param);
+
+    QueryResult<Song> getMusic(MusicQueryForm param);
 }

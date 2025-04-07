@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MusicQueryForm extends QueryForm {
-    String name;
-    String artist;
+    private Integer tagId;
+    private String name;
+    private String artist;
+    private String ip;
 }

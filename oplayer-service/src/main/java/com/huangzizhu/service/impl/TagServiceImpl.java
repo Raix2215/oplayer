@@ -1,10 +1,15 @@
 package com.huangzizhu.service.impl;
 
 import com.huangzizhu.exception.ParamInvalidException;
+import com.huangzizhu.exception.TagException;
+import com.huangzizhu.mapper.SongMapper;
 import com.huangzizhu.mapper.TagMapper;
 import com.huangzizhu.pojo.QueryResult;
+import com.huangzizhu.pojo.Song;
 import com.huangzizhu.pojo.tag.Tag;
 import com.huangzizhu.pojo.tag.TagCategory;
+import com.huangzizhu.pojo.tag.TagForSongParam;
+import com.huangzizhu.service.SongService;
 import com.huangzizhu.service.TagService;
 import com.huangzizhu.utils.CommonUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +24,8 @@ import java.util.List;
 public class TagServiceImpl implements TagService {
     @Autowired
     private TagMapper tagMapper;
+    @Autowired
+    private SongMapper songMapper;
 
     @Override
     public QueryResult<TagCategory> getTagCategory() {
@@ -77,6 +84,29 @@ public class TagServiceImpl implements TagService {
         tagMapper.updateTag(param);
     }
 
+    @Override
+    public void addTagForMusic(TagForSongParam param) {
+        checkSong(param.getSongId());
+        checkTag(param.getTagId());
+        tagMapper.addTagForSong(param);
+    }
+
+    @Override
+    public void deleteTagForMusic(TagForSongParam param) {
+        checkTag(param.getTagId());
+        checkSong(param.getSongId());
+        Integer affectRows = tagMapper.deleteTagForMusic(param);
+        if (affectRows == 0) throw new TagException("该歌曲没有这个标签");
+    }
+
+    @Override
+    public QueryResult<Tag> getTagsBySongId(Integer songId) {
+        checkSong(songId);
+        List<Tag> list = tagMapper.getTagsBySongId(songId);
+        Integer total = list.size();
+        return new QueryResult<>(total,list);
+    }
+
     private Tag checkTag(Integer tagId) {
         Tag tag = tagMapper.getTag(tagId);
         if (tag == null) {
@@ -89,6 +119,14 @@ public class TagServiceImpl implements TagService {
         if (res != null) {
             throw new ParamInvalidException("标签已存在");
         }
+    }
+
+    private Song checkSong(Integer id) {
+        Song song = songMapper.getMusicById(id);
+        if (song == null) {
+            throw new ParamInvalidException("歌曲不存在");
+        }
+        return song;
     }
 
     private TagCategory checkCategory(Integer categoryId) {

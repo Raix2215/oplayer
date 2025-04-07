@@ -33,4 +33,12 @@ public interface SongMapper {
     List<SimpleMusicInfo> fuzzySearch(String name);
 
     Integer getMusicDuration(Integer songId);
+
+    Integer getMusicCountByTagId(Integer tagId);
+
+    List<Song> getMusicByTagId(MusicQueryForm param);
+
+    Integer getMusicCount(MusicQueryForm param);
+
+    List<Song> getMusic(MusicQueryForm param);
 }

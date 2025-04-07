@@ -2,15 +2,14 @@ package com.huangzizhu.controller;
 
 import com.huangzizhu.pojo.QueryResult;
 import com.huangzizhu.pojo.Result;
+import com.huangzizhu.pojo.tag.TagForSongParam;
 import com.huangzizhu.pojo.tag.Tag;
 import com.huangzizhu.pojo.tag.TagCategory;
 import com.huangzizhu.service.TagService;
-import jakarta.websocket.server.PathParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -61,4 +60,23 @@ public class TagController {
         tagService.updateTag(param);
         return Result.success();
     }
+    @PostMapping("/tag/music")
+    public Result addTagForMusic(@RequestBody TagForSongParam param){
+        log.info("为歌曲添加标签{}", param);
+        tagService.addTagForMusic(param);
+        return Result.success();
+    }
+    @DeleteMapping("/tag/music")
+    public Result deleteTagForMusic(@RequestBody TagForSongParam param){
+        log.info("为歌曲删除标签{}", param);
+        tagService.deleteTagForMusic(param);
+        return Result.success();
+    }
+    @GetMapping("/tag/music/{songId}")
+    public Result getTagForMusic(@PathVariable Integer songId){
+        log.info("获取歌曲的标签{}", songId);
+        QueryResult<Tag> data = tagService.getTagsBySongId(songId);
+        return Result.success(data);
+    }
+
 }

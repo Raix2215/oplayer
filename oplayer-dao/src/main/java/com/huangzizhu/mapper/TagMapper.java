@@ -2,6 +2,7 @@ package com.huangzizhu.mapper;
 
 import com.huangzizhu.pojo.tag.Tag;
 import com.huangzizhu.pojo.tag.TagCategory;
+import com.huangzizhu.pojo.tag.TagForSongParam;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -26,4 +27,10 @@ public interface TagMapper {
     void deleteTag(Integer tagId);
 
     void updateTag(Tag param);
+
+    void addTagForSong(TagForSongParam param);
+
+    Integer deleteTagForMusic(TagForSongParam param);
+
+    List<Tag> getTagsBySongId(Integer songId);
 }
