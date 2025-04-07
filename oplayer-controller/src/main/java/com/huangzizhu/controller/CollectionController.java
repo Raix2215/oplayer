@@ -1,5 +1,7 @@
 package com.huangzizhu.controller;
 
+import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
+import com.huangzizhu.annotion.UserCheck;
 import com.huangzizhu.pojo.OperateMusicToListParam;
 import com.huangzizhu.pojo.QueryResult;
 import com.huangzizhu.pojo.Song;
@@ -19,24 +21,28 @@ public class CollectionController {
     @Autowired
     private CollectionService collectionService;
 
+    @UserCheck
     @PostMapping("/music")
     public Result addMusic(@RequestBody OperateMusicToListParam param) {
         log.info("添加歌曲至收藏: {}", param);
         collectionService.addMusic(param);
         return Result.success();
     }
+
     @GetMapping("/{id}")
     public Result getCollection(@PathVariable Integer id) {
         log.info("获取用户收藏列表: {}", id);
         Collection data = collectionService.getCollection(id);
         return Result.success(data);
     }
+    @UserCheck
     @DeleteMapping("/music")
     public Result deleteMusic(@RequestBody OperateMusicToListParam param) {
         log.info("删除收藏列表中的歌曲: {}", param);
         collectionService.deleteMusic(param);
         return Result.success();
     }
+    @UserCheck
     @PutMapping
     public Result updateCollection(@RequestBody UpdateCollectionParam param) {
         log.info("更新收藏列表: {}", param);

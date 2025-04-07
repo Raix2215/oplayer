@@ -1,5 +1,6 @@
 package com.huangzizhu.controller;
 
+import com.huangzizhu.annotion.AdminCheck;
 import com.huangzizhu.pojo.QueryResult;
 import com.huangzizhu.pojo.comment.Comment;
 import com.huangzizhu.pojo.Result;
@@ -45,6 +46,7 @@ public class CommentController {
         QueryResult<Comment> data = commentService.getCommentByUserId(param);
         return Result.success(data);
     }
+    @AdminCheck
     @DeleteMapping("/{id}")
     public Result deleteComment(@PathVariable Integer id) {
         log.info("删除评论:{}", id);

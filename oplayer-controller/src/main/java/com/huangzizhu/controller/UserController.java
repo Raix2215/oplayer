@@ -1,5 +1,8 @@
 package com.huangzizhu.controller;
 
+import com.huangzizhu.annotion.AdminCheck;
+import com.huangzizhu.annotion.AdminOrUserCheck;
+import com.huangzizhu.annotion.UserCheck;
 import com.huangzizhu.pojo.*;
 import com.huangzizhu.pojo.user.*;
 import com.huangzizhu.service.UserService;
@@ -56,6 +59,7 @@ public class UserController {
         return Result.success(data);
     }
 
+    @AdminOrUserCheck(field = "id")
     @PutMapping("/update")
     public Result updateUserInfo(@RequestBody UpdateUserInfoParam param) {
         log.info("更新用户信息 param:{}", param);
@@ -63,6 +67,7 @@ public class UserController {
         return Result.success();
     }
 
+    @AdminCheck
     @DeleteMapping("/{id}")
     public Result deleteUser(@PathVariable Integer id) {
         log.info("删除用户 id:{}", id);
@@ -70,6 +75,7 @@ public class UserController {
         return Result.success();
     }
 
+    @AdminOrUserCheck(field = "id")
     @PutMapping("/update/password")
     public Result updatePassword(@RequestBody LoginParam param) {
         log.info("更新用户密码 param:{}", param);

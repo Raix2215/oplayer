@@ -1,5 +1,6 @@
 package com.huangzizhu.controller;
 
+import com.huangzizhu.annotion.AdminCheck;
 import com.huangzizhu.pojo.QueryResult;
 import com.huangzizhu.pojo.Result;
 import com.huangzizhu.pojo.tag.TagForSongParam;
@@ -42,30 +43,35 @@ public class TagController {
         Tag data = tagService.getTag(tagId);
         return Result.success(data);
     }
+    @AdminCheck
     @PostMapping()
     public Result addTag(@RequestBody Tag param){
         log.info("添加标签{}", param);
         tagService.addTag(param);
         return Result.success();
     }
+    @AdminCheck
     @DeleteMapping("/{tagId}")
     public Result deleteTag(@PathVariable Integer tagId){
         log.info("删除标签{}", tagId);
         tagService.deleteTag(tagId);
         return Result.success();
     }
+    @AdminCheck
     @PutMapping()
     public Result updateTag(@RequestBody Tag param){
         log.info("更新标签{}", param);
         tagService.updateTag(param);
         return Result.success();
     }
+    @AdminCheck
     @PostMapping("/music")
     public Result addTagForMusic(@RequestBody TagForSongParam param){
         log.info("为歌曲添加标签{}", param);
         tagService.addTagForMusic(param);
         return Result.success();
     }
+    @AdminCheck
     @DeleteMapping("/music")
     public Result deleteTagForMusic(@RequestBody TagForSongParam param){
         log.info("为歌曲删除标签{}", param);

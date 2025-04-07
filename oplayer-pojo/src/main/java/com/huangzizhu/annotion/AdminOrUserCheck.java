@@ -7,5 +7,6 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Admin {
+public @interface AdminOrUserCheck {
+    String field() default "userId";
 }

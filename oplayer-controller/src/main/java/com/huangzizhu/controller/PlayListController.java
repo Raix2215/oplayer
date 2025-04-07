@@ -1,5 +1,6 @@
 package com.huangzizhu.controller;
 
+import com.huangzizhu.annotion.UserCheck;
 import com.huangzizhu.pojo.OperateMusicToListParam;
 import com.huangzizhu.pojo.QueryResult;
 import com.huangzizhu.pojo.Result;
@@ -19,6 +20,7 @@ public class PlayListController {
     @Autowired
     private PlayListService playListService;
 
+    @UserCheck(field = "creatorId")
     @PostMapping()
     public Result createPlayList(@RequestBody Playlist param){
         log.info("创建歌单请求: {}", param);
@@ -31,6 +33,7 @@ public class PlayListController {
         QueryResult<Playlist> data = playListService.getAllPlayList(param);
         return Result.success(data);
     }
+    @UserCheck
     @PostMapping("/music")
     public Result addMusicToPlayList(@RequestBody OperateMusicToListParam param){
         log.info("添加歌曲到歌单请求: {}", param);
@@ -49,18 +52,21 @@ public class PlayListController {
         Playlist data = playListService.getPlayList(id);
         return Result.success(data);
     }
+    @UserCheck
     @DeleteMapping("/music")
     public Result deleteMusicFromPlayList(@RequestBody OperateMusicToListParam param){
         log.info("删除歌单内歌曲请求: {}", param);
         playListService.deleteMusicFromPlayList(param);
         return Result.success();
     }
+    @UserCheck(field = "creatorId")
     @PutMapping()
     public Result updatePlayList(@RequestBody Playlist param){
         log.info("更新歌单请求: {}", param);
         playListService.updatePlayList(param);
         return Result.success();
     }
+    @UserCheck(field = "creatorId")
     @DeleteMapping()
     public Result deletePlayList(@RequestBody Playlist param){
         log.info("删除歌单请求: {}", param);

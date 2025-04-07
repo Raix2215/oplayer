@@ -1,9 +1,14 @@
 package com.huangzizhu.utils;
 
 import com.huangzizhu.exception.ParamInvalidException;
+import com.huangzizhu.pojo.OperationLog;
 import com.huangzizhu.pojo.playList.Playlist;
+import jakarta.servlet.http.HttpServletRequest;
+import org.aspectj.lang.ProceedingJoinPoint;
 
 import java.io.File;
+import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.regex.Pattern;
 
 public class CommonUtils {
@@ -41,4 +46,43 @@ public class CommonUtils {
         return MD5_PATTERN.matcher(input).matches();
     }
     public static boolean isBlank(String str) {return str == null || str.isBlank();}
+    public static String getClientIp(HttpServletRequest request) {
+        String ip = request.getHeader("X-Forwarded-For");
+
+        if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("Proxy-Client-IP");
+        }
+        if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("WL-Proxy-Client-IP");
+        }
+        if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("HTTP_CLIENT_IP");
+        }
+        if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("HTTP_X_FORWARDED_FOR");
+        }
+        if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getRemoteAddr();
+        }
+
+        // 对于通过多个代理的情况，第一个IP才是真实IP
+        if (ip != null && ip.contains(",")) {
+            ip = ip.split(",")[0].trim();
+        }
+
+        return ip;
+    }
+    public static OperationLog getOperateLog(ProceedingJoinPoint joinPoint, Object result, long costTime, String ip, Integer operateId, Integer operateType) {
+        OperationLog operateLog = new OperationLog();
+        operateLog.setOperateId(operateId);// 设置操作人ID
+        operateLog.setOperateType(operateType); // 设置操作人类型
+        operateLog.setIp(ip); // 设置操作人IP
+        operateLog.setOperateTime(LocalDateTime.now()); // 设置操作时间
+        operateLog.setClassName(joinPoint.getTarget().getClass().getName()); // 设置类名
+        operateLog.setMethodName(joinPoint.getSignature().getName()); // 设置方法名
+        operateLog.setMethodParams(Arrays.toString(joinPoint.getArgs())); // 设置方法参数
+        operateLog.setReturnValue(result.toString()); // 设置返回值
+        operateLog.setCostTime(costTime); // 设置耗时
+        return operateLog;
+    }
 }

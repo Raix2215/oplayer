@@ -1,5 +1,6 @@
 package com.huangzizhu.controller;
 
+import com.huangzizhu.annotion.AdminCheck;
 import com.huangzizhu.pojo.*;
 import com.huangzizhu.pojo.user.Admin;
 import com.huangzizhu.pojo.user.AdminAddParam;
@@ -18,18 +19,21 @@ public class AdminController {
     @Autowired
     private AdminService adminService;
 
+    @AdminCheck
     @PostMapping("/add")
     public Result addAdmin(@RequestBody AdminAddParam param) {
         log.info("添加管理员 param:{}", param);
         adminService.addAdmin(param);
         return Result.success();
     }
+    @AdminCheck
     @PostMapping("/login")
     public Result login(@RequestBody LoginParam param) {
         log.info("管理员登录 param:{}", param);
         LoginResult<Admin> data = adminService.login(param);
         return Result.success(data);
     }
+    @AdminCheck
     @GetMapping("all")
     public Result getAllAdmin() {
         log.info("查询所有管理员");
