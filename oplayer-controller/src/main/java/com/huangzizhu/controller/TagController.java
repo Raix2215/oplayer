@@ -60,19 +60,19 @@ public class TagController {
         tagService.updateTag(param);
         return Result.success();
     }
-    @PostMapping("/tag/music")
+    @PostMapping("/music")
     public Result addTagForMusic(@RequestBody TagForSongParam param){
         log.info("为歌曲添加标签{}", param);
         tagService.addTagForMusic(param);
         return Result.success();
     }
-    @DeleteMapping("/tag/music")
+    @DeleteMapping("/music")
     public Result deleteTagForMusic(@RequestBody TagForSongParam param){
         log.info("为歌曲删除标签{}", param);
         tagService.deleteTagForMusic(param);
         return Result.success();
     }
-    @GetMapping("/tag/music/{songId}")
+    @GetMapping("/music/{songId}")
     public Result getTagForMusic(@PathVariable Integer songId){
         log.info("获取歌曲的标签{}", songId);
         QueryResult<Tag> data = tagService.getTagsBySongId(songId);

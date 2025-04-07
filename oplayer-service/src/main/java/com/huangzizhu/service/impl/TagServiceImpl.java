@@ -14,6 +14,7 @@ import com.huangzizhu.service.TagService;
 import com.huangzizhu.utils.CommonUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -29,14 +30,24 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public QueryResult<TagCategory> getTagCategory() {
-        List<TagCategory> list = tagMapper.getTagCategory();
+        List<TagCategory> list = null;
+        try {
+            list = tagMapper.getTagCategory();
+        } catch (Exception e) {
+            throw new TagException("获取标签分类失败",e);
+        }
         Integer total = list.size();
         return new QueryResult<>(total,list);
     }
 
     @Override
     public QueryResult<Tag> getTags() {
-        List<Tag> list = tagMapper.getTags();
+        List<Tag> list = null;
+        try {
+            list = tagMapper.getTags();
+        } catch (Exception e) {
+            throw new TagException("获取标签失败",e);
+        }
         Integer total = list.size();
         return new QueryResult<>(total,list);
     }
@@ -44,7 +55,12 @@ public class TagServiceImpl implements TagService {
     @Override
     public QueryResult<Tag> getTags(Integer categoryId) {
         checkCategory(categoryId);
-        List<Tag> list = tagMapper.getTagsByCateId(categoryId);
+        List<Tag> list = null;
+        try {
+            list = tagMapper.getTagsByCateId(categoryId);
+        } catch (Exception e) {
+            throw new TagException("获取标签失败",e);
+        }
         Integer total = list.size();
         return new QueryResult<>(total,list);
     }
@@ -62,7 +78,11 @@ public class TagServiceImpl implements TagService {
         param.setCreateTime(LocalDateTime.now());
         param.setUpdateTime(LocalDateTime.now());
         param.setStatus(1);
-        tagMapper.addTag(param);
+        try {
+            tagMapper.addTag(param);
+        } catch (Exception e) {
+            throw new TagException("添加标签失败",e);
+        }
     }
 
 
@@ -70,7 +90,11 @@ public class TagServiceImpl implements TagService {
     @Override
     public void deleteTag(Integer tagId) {
         checkTag(tagId);
-        tagMapper.deleteTag(tagId);
+        try {
+            tagMapper.deleteTag(tagId);
+        } catch (Exception e) {
+            throw new TagException("删除标签失败",e);
+        }
     }
 
     @Override
@@ -81,28 +105,48 @@ public class TagServiceImpl implements TagService {
         checkInfo(param);
         param.setUpdateTime(LocalDateTime.now());
         param.setStatus(1);
-        tagMapper.updateTag(param);
+        try {
+            tagMapper.updateTag(param);
+        } catch (Exception e) {
+            throw new TagException("更新标签失败",e);
+        }
     }
 
     @Override
     public void addTagForMusic(TagForSongParam param) {
         checkSong(param.getSongId());
         checkTag(param.getTagId());
-        tagMapper.addTagForSong(param);
+        try {
+            tagMapper.addTagForSong(param);
+        }catch (DuplicateKeyException e){
+          throw new TagException("该歌曲已存在该标签",e);
+        } catch (Exception e) {
+            throw new TagException("为歌曲添加标签失败",e);
+        }
     }
 
     @Override
     public void deleteTagForMusic(TagForSongParam param) {
         checkTag(param.getTagId());
         checkSong(param.getSongId());
-        Integer affectRows = tagMapper.deleteTagForMusic(param);
+        Integer affectRows = null;
+        try {
+            affectRows = tagMapper.deleteTagForMusic(param);
+        } catch (Exception e) {
+            throw new TagException("为歌曲删除标签失败",e);
+        }
         if (affectRows == 0) throw new TagException("该歌曲没有这个标签");
     }
 
     @Override
     public QueryResult<Tag> getTagsBySongId(Integer songId) {
         checkSong(songId);
-        List<Tag> list = tagMapper.getTagsBySongId(songId);
+        List<Tag> list = null;
+        try {
+            list = tagMapper.getTagsBySongId(songId);
+        } catch (Exception e) {
+            throw new TagException("获取歌曲标签失败",e);
+        }
         Integer total = list.size();
         return new QueryResult<>(total,list);
     }

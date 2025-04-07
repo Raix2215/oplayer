@@ -1,6 +1,7 @@
 package com.huangzizhu.service.impl;
 
 import com.huangzizhu.exception.GetMusicResourceException;
+import com.huangzizhu.exception.OperateMusicToLIstFailException;
 import com.huangzizhu.exception.ParamInvalidException;
 import com.huangzizhu.mapper.AlbumMapper;
 import com.huangzizhu.mapper.SongMapper;
@@ -13,6 +14,7 @@ import com.huangzizhu.pojo.music.SimpleMusicInfo;
 import com.huangzizhu.pojo.tag.Tag;
 import com.huangzizhu.service.SongService;
 import com.huangzizhu.service.TagService;
+import com.huangzizhu.utils.CommonUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -205,17 +207,38 @@ public class SongServiceImpl implements SongService {
     public QueryResult<Song> getMusicByTagId(MusicQueryForm param) {
         checkTag(param.getTagId());
         param.setStart(param.getPageSize() * (param.getPage()-1));
-        Integer total = songMapper.getMusicCountByTagId(param.getTagId());
-        List<Song> songs = songMapper.getMusicByTagId(param);
+        Integer total = null;
+        List<Song> songs = null;
+        try {
+            total = songMapper.getMusicCountByTagId(param.getTagId());
+            songs = songMapper.getMusicByTagId(param);
+        } catch (Exception e) {
+            throw new OperateMusicToLIstFailException("获取歌曲失败");
+        }
         return new QueryResult<>(total, songs);
     }
 
     @Override
     public QueryResult<Song> getMusic(MusicQueryForm param) {
         param.setStart(param.getPageSize() * (param.getPage()-1));
-        Integer total = songMapper.getMusicCount(param);
-        List<Song> songs = songMapper.getMusic(param);
-        return new QueryResult<>(total, songs);
+        boolean nameIsBlank = CommonUtils.isBlank(param.getName());
+        boolean artistIsBlank = CommonUtils.isBlank(param.getArtist());
+        Integer total = null;
+        List<Song> list = null;
+        if(nameIsBlank && artistIsBlank) throw new ParamInvalidException("歌曲名称和歌手不能同时为空");
+        else if(nameIsBlank) {
+            total = songMapper.getMusicCountByArtist(param);
+            list = songMapper.getMusicByArtist(param);
+        }
+        else if(artistIsBlank){
+            total = songMapper.getMusicCountByName(param);
+            list = songMapper.getMusicByName(param);
+        }
+        else {
+            total = songMapper.getMusicCountByNameAndArtist(param);
+            list = songMapper.getMusicByNameAndArtist();
+        }
+        return new QueryResult<>(total, list);
     }
 
     private preProcess getPreProcess(List<Song> songs) {

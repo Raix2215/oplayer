@@ -77,14 +77,14 @@ public class MusicController {
         log.info("下载音乐: {}", md5);
         return songService.downloadMusic(md5);
     }
-    @PostMapping("/music/search/tag")
-    public Result getMusicByTagId(MusicQueryForm param) {
+    @PostMapping("/search/tag")
+    public Result getMusicByTagId(@RequestBody MusicQueryForm param) {
         log.info("根据标签获取音乐: {}", param);
         QueryResult<Song> data = songService.getMusicByTagId(param);
         return Result.success(data);
     }
-    @PostMapping("/music/search")
-    public Result getMusic(MusicQueryForm param) {
+    @PostMapping("/search")
+    public Result getMusic(@RequestBody MusicQueryForm param) {
         log.info("根据查询参数获取音乐: {}", param);
         QueryResult<Song> data = songService.getMusic(param);
         return Result.success(data);
