@@ -4,6 +4,7 @@ import com.huangzizhu.exception.PermissionDenyException;
 import com.huangzizhu.exception.UserNotFoundException;
 import com.huangzizhu.mapper.AdminMapper;
 import com.huangzizhu.pojo.user.Admin;
+import com.huangzizhu.utils.CurrentHolder;
 import com.huangzizhu.utils.JWTUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -25,7 +26,6 @@ public class AdminInterceptor implements HandlerInterceptor {
 
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String path = request.getRequestURI();
-
         // 拦截特定路径
         if (path.contains("/admin")) {
             log.info("拦截路径:{}", path);
@@ -64,8 +64,6 @@ public class AdminInterceptor implements HandlerInterceptor {
                     response.setStatus(401);
                     throw new PermissionDenyException("非管理员,权限不足");
                 }
-//                CurrentHolder.setCurrentId(id);
-//                CurrentHolder.setCurrentName(username);
             }catch (PermissionDenyException e){
                 //管理员错误继续向上抛，与token异常区分
                 throw e;

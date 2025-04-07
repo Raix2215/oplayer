@@ -30,10 +30,7 @@ public class UserInterceptor implements HandlerInterceptor {
                 response.setStatus(401);
                 return false;
             }
-//            6. 更新用户信息Y --只能管理员账户或者本人
-//            7. 删除用户 --只能管理员账户
-//            9. 修改密码--只能管理员账户或者本人
-            //获取令牌，由service层进行权限校验
+            //获取令牌，由aop层进行权限校验
             // 如果有token,校验token
             try {
                 //获取token中的信息
