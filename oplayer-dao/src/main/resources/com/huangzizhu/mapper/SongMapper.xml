@@ -92,9 +92,62 @@
         where id = #{id}
     </select>
     <select id="fuzzySearch" resultType="com.huangzizhu.pojo.music.SimpleMusicInfo">
-        select id,name,artist from song where name like concat('%', #{name}, '%') and is_available = 1
+        select id,name,artist from song where name like concat('%', #{name}, '%') or artist like concat('%', #{name}, '%') and is_available = 1 limit 0,10
     </select>
     <select id="getMusicDuration" resultType="java.lang.Integer">
         select duration from song where id = #{id}
+    </select>
+    <select id="getMusicCountByTagId" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM song s
+                JOIN song_tag st ON s.id = st.song_id
+        WHERE st.tag_id = #{tagId}
+    </select>
+    <select id="getMusicByTagId" resultType="com.huangzizhu.pojo.Song">
+        SELECT s.*
+        FROM `song` s
+                 JOIN `song_tag` st ON s.id = st.song_id
+        WHERE st.tag_id = #{tagId}
+        limit #{start}, #{pageSize}
+    </select>
+    <select id="getMusicCount" resultType="java.lang.Integer">
+        select count(*) from song
+                 where name like concat('%', #{name}, '%')
+                    or artist like concat('%', #{artist}, '%)')
+    </select>
+    <select id="getMusic" resultType="com.huangzizhu.pojo.Song">
+        select * from song
+        where name like concat('%', #{name}, '%')
+           or artist like concat('%', #{artist}, '%)')
+        limit #{start}, #{pageSize}
+    </select>
+    <select id="getMusicCountByName" resultType="java.lang.Integer">
+        select count(*) from song
+        where name like concat('%', #{name}, '%')
+    </select>
+    <select id="getMusicByName" resultType="com.huangzizhu.pojo.Song">
+        select * from song
+        where name like concat('%', #{name}, '%')
+        limit #{start}, #{pageSize}
+    </select>
+    <select id="getMusicCountByArtist" resultType="java.lang.Integer">
+        select count(*) from song
+        where artist like concat('%', #{artist}, '%')
+    </select>
+    <select id="getMusicByArtist" resultType="com.huangzizhu.pojo.Song">
+        select * from song
+        where artist like concat('%', #{artist}, '%')
+        limit #{start}, #{pageSize}
+    </select>
+    <select id="getMusicCountByNameAndArtist" resultType="java.lang.Integer">
+        select count(*) from song
+        where name like concat('%', #{name}, '%') and
+              artist like concat('%', #{artist}, '%')
+    </select>
+    <select id="getMusicByNameAndArtist" resultType="com.huangzizhu.pojo.Song">
+        select * from song
+        where name like concat('%', #{name}, '%') and
+            artist like concat('%', #{artist}, '%')
+        limit #{start},#{pageSize}
     </select>
 </mapper>

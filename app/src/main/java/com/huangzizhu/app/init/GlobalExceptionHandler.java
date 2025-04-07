@@ -83,6 +83,19 @@ public class GlobalExceptionHandler {
         log.error("歌单操作异常", e);
         return Result.error(e.getMessage());
     }
+    // 处理评论异常
+    @ExceptionHandler
+    public Result handleException(CommentException e) {
+        log.error("评论操作异常", e);
+        return Result.error(e.getMessage());
+    }
+    // 处理标签异常
+    @ExceptionHandler
+    public Result handleException(TagException e) {
+        log.error("标签操作异常", e);
+        return Result.error(e.getMessage());
+    }
+
 
 
 

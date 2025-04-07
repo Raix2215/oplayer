@@ -44,8 +44,6 @@ public class MusicController {
         List<SimpleMusicInfo> data = songService.fuzzySearch(name);
         return Result.success(data);
     }
-
-
     @GetMapping("/stream/{md5}")
     ResponseEntity<StreamingResponseBody> streamMusic(@PathVariable String md5, @RequestHeader(value = "Range", required = false) String rangeHeader) throws IOException {
         log.info("获取音乐流: {}", md5);
@@ -78,6 +76,18 @@ public class MusicController {
     public ResponseEntity<Resource> downloadMusic(@PathVariable String md5) throws IOException {
         log.info("下载音乐: {}", md5);
         return songService.downloadMusic(md5);
+    }
+    @PostMapping("/search/tag")
+    public Result getMusicByTagId(@RequestBody MusicQueryForm param) {
+        log.info("根据标签获取音乐: {}", param);
+        QueryResult<Song> data = songService.getMusicByTagId(param);
+        return Result.success(data);
+    }
+    @PostMapping("/search")
+    public Result getMusic(@RequestBody MusicQueryForm param) {
+        log.info("根据查询参数获取音乐: {}", param);
+        QueryResult<Song> data = songService.getMusic(param);
+        return Result.success(data);
     }
 
 }
