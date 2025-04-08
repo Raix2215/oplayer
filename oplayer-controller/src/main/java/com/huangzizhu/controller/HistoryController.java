@@ -1,5 +1,6 @@
 package com.huangzizhu.controller;
 
+import com.huangzizhu.annotion.Log;
 import com.huangzizhu.pojo.QueryResult;
 import com.huangzizhu.pojo.Result;
 import com.huangzizhu.pojo.history.HistoryQueryParam;
@@ -24,6 +25,7 @@ public class HistoryController {
         QueryResult<PlayHistory> data = historyService.getHistoryByUserId(param);
         return Result.success(data);
     }
+    @Log
     @PostMapping("/submit")
     public Result addHistory(@RequestBody PlayHistory param){
         log.info("添加用户{}的历史记录", param);

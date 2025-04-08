@@ -6,6 +6,7 @@ import com.huangzizhu.pojo.music.MusicQueryForm;
 import com.huangzizhu.pojo.music.SimpleMusicInfo;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import java.io.IOException;
@@ -37,4 +38,6 @@ public interface SongService {
     QueryResult<Song> getMusicByTagId(MusicQueryForm param);
 
     QueryResult<Song> getMusic(MusicQueryForm param);
+
+    void uploadMusic(MultipartFile file);
 }

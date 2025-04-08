@@ -1,6 +1,7 @@
 package com.huangzizhu.controller;
 
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
+import com.huangzizhu.annotion.Log;
 import com.huangzizhu.annotion.UserCheck;
 import com.huangzizhu.pojo.OperateMusicToListParam;
 import com.huangzizhu.pojo.QueryResult;
@@ -21,6 +22,7 @@ public class CollectionController {
     @Autowired
     private CollectionService collectionService;
 
+    @Log
     @UserCheck
     @PostMapping("/music")
     public Result addMusic(@RequestBody OperateMusicToListParam param) {
@@ -35,6 +37,7 @@ public class CollectionController {
         Collection data = collectionService.getCollection(id);
         return Result.success(data);
     }
+    @Log
     @UserCheck
     @DeleteMapping("/music")
     public Result deleteMusic(@RequestBody OperateMusicToListParam param) {
@@ -42,6 +45,7 @@ public class CollectionController {
         collectionService.deleteMusic(param);
         return Result.success();
     }
+    @Log
     @UserCheck
     @PutMapping
     public Result updateCollection(@RequestBody UpdateCollectionParam param) {

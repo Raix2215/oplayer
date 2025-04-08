@@ -96,6 +96,13 @@ public class GlobalExceptionHandler {
         return Result.error(e.getMessage());
     }
 
+    //处理文件异常
+    @ExceptionHandler
+    public Result handleException(FIleException e) {
+        log.error("文件异常", e);
+        return Result.error(e.getMessage());
+    }
+
 
 
 

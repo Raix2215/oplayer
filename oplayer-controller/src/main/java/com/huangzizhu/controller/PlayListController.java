@@ -1,5 +1,6 @@
 package com.huangzizhu.controller;
 
+import com.huangzizhu.annotion.Log;
 import com.huangzizhu.annotion.UserCheck;
 import com.huangzizhu.pojo.OperateMusicToListParam;
 import com.huangzizhu.pojo.QueryResult;
@@ -20,6 +21,7 @@ public class PlayListController {
     @Autowired
     private PlayListService playListService;
 
+    @Log
     @UserCheck(field = "creatorId")
     @PostMapping()
     public Result createPlayList(@RequestBody Playlist param){
@@ -33,6 +35,8 @@ public class PlayListController {
         QueryResult<Playlist> data = playListService.getAllPlayList(param);
         return Result.success(data);
     }
+
+    @Log
     @UserCheck
     @PostMapping("/music")
     public Result addMusicToPlayList(@RequestBody OperateMusicToListParam param){
@@ -52,6 +56,7 @@ public class PlayListController {
         Playlist data = playListService.getPlayList(id);
         return Result.success(data);
     }
+    @Log
     @UserCheck
     @DeleteMapping("/music")
     public Result deleteMusicFromPlayList(@RequestBody OperateMusicToListParam param){
@@ -59,6 +64,7 @@ public class PlayListController {
         playListService.deleteMusicFromPlayList(param);
         return Result.success();
     }
+    @Log
     @UserCheck(field = "creatorId")
     @PutMapping()
     public Result updatePlayList(@RequestBody Playlist param){
@@ -66,6 +72,7 @@ public class PlayListController {
         playListService.updatePlayList(param);
         return Result.success();
     }
+    @Log
     @UserCheck(field = "creatorId")
     @DeleteMapping()
     public Result deletePlayList(@RequestBody Playlist param){

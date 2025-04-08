@@ -1,5 +1,6 @@
 package com.huangzizhu.controller;
 
+import com.huangzizhu.annotion.AdminCheck;
 import com.huangzizhu.pojo.QueryResult;
 import com.huangzizhu.pojo.Result;
 import com.huangzizhu.pojo.music.SimpleMusicInfo;
@@ -13,6 +14,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import java.io.IOException;
@@ -88,6 +90,14 @@ public class MusicController {
         log.info("根据查询参数获取音乐: {}", param);
         QueryResult<Song> data = songService.getMusic(param);
         return Result.success(data);
+    }
+
+    @AdminCheck
+    @PostMapping("/upload")
+    public Result uploadMusic(@RequestParam("file") MultipartFile file) {
+        log.info("上传音乐: {}", file.getOriginalFilename());
+        songService.uploadMusic(file);
+        return Result.success();
     }
 
 }

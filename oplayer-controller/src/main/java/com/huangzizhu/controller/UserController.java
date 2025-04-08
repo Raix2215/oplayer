@@ -2,6 +2,7 @@ package com.huangzizhu.controller;
 
 import com.huangzizhu.annotion.AdminCheck;
 import com.huangzizhu.annotion.AdminOrUserCheck;
+import com.huangzizhu.annotion.Log;
 import com.huangzizhu.annotion.UserCheck;
 import com.huangzizhu.pojo.*;
 import com.huangzizhu.pojo.user.*;
@@ -32,12 +33,14 @@ public class UserController {
         QueryResult<User> data = userService.getAllUser(param);
         return Result.success(data);
     }
+    @Log
     @PostMapping("/reg")
     public Result regUser(@RequestBody UserRegParam param) {
         log.info("注册用户 param:{}", param);
         userService.regUser(param);
         return Result.success();
     }
+    @Log
     @PostMapping("/login")
     public Result login(@RequestBody LoginParam param) {
         log.info("用户登录 param:{}", param);
@@ -59,6 +62,7 @@ public class UserController {
         return Result.success(data);
     }
 
+    @Log
     @AdminOrUserCheck(field = "id")
     @PutMapping("/update")
     public Result updateUserInfo(@RequestBody UpdateUserInfoParam param) {
@@ -67,6 +71,7 @@ public class UserController {
         return Result.success();
     }
 
+    @Log
     @AdminCheck
     @DeleteMapping("/{id}")
     public Result deleteUser(@PathVariable Integer id) {
@@ -75,6 +80,7 @@ public class UserController {
         return Result.success();
     }
 
+    @Log
     @AdminOrUserCheck(field = "id")
     @PutMapping("/update/password")
     public Result updatePassword(@RequestBody LoginParam param) {
