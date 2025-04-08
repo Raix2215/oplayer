@@ -26,7 +26,7 @@ public class AdminController {
         adminService.addAdmin(param);
         return Result.success();
     }
-    @AdminCheck
+
     @PostMapping("/login")
     public Result login(@RequestBody LoginParam param) {
         log.info("管理员登录 param:{}", param);
