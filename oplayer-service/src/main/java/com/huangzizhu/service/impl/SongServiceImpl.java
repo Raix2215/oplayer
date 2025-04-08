@@ -1,5 +1,6 @@
 package com.huangzizhu.service.impl;
 
+import com.huangzizhu.exception.FIleException;
 import com.huangzizhu.exception.GetMusicResourceException;
 import com.huangzizhu.exception.OperateMusicToLIstFailException;
 import com.huangzizhu.exception.ParamInvalidException;
@@ -9,6 +10,7 @@ import com.huangzizhu.mapper.TagMapper;
 import com.huangzizhu.pojo.Album;
 import com.huangzizhu.pojo.QueryResult;
 import com.huangzizhu.pojo.Song;
+import com.huangzizhu.pojo.config.FileWatcherProperties;
 import com.huangzizhu.pojo.music.MusicQueryForm;
 import com.huangzizhu.pojo.music.SimpleMusicInfo;
 import com.huangzizhu.pojo.tag.Tag;
@@ -25,8 +27,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
@@ -43,6 +47,8 @@ public class SongServiceImpl implements SongService {
     private AlbumMapper albumMapper;
     @Autowired
     private TagMapper tagMapper;
+    @Autowired
+    private FileWatcherProperties fileWatcherProperties;
 
 
 
@@ -239,6 +245,18 @@ public class SongServiceImpl implements SongService {
             list = songMapper.getMusicByNameAndArtist();
         }
         return new QueryResult<>(total, list);
+    }
+
+    @Override
+    public void uploadMusic(MultipartFile file) {
+        if (file.isEmpty()) throw new FIleException("文件不能为空!");
+        if(CommonUtils.isBlank(file.getOriginalFilename())) throw new FIleException("文件名不能为空!");
+        if (!CommonUtils.isSupportedFormat(file.getOriginalFilename())) throw new FIleException("不支持的文件格式!");
+        try {
+            file.transferTo(new File(new File(System.getProperty("user.dir"),fileWatcherProperties.getDirectory()),file.getOriginalFilename()));
+        } catch (IOException e) {
+            throw new FIleException("文件上传失败!", e);
+        }
     }
 
     private preProcess getPreProcess(List<Song> songs) {
