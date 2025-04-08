@@ -1,6 +1,7 @@
 package com.huangzizhu.controller;
 
 import com.huangzizhu.annotion.AdminCheck;
+import com.huangzizhu.annotion.Log;
 import com.huangzizhu.pojo.QueryResult;
 import com.huangzizhu.pojo.Result;
 import com.huangzizhu.pojo.tag.TagForSongParam;
@@ -43,6 +44,7 @@ public class TagController {
         Tag data = tagService.getTag(tagId);
         return Result.success(data);
     }
+    @Log
     @AdminCheck
     @PostMapping()
     public Result addTag(@RequestBody Tag param){
@@ -50,6 +52,7 @@ public class TagController {
         tagService.addTag(param);
         return Result.success();
     }
+    @Log
     @AdminCheck
     @DeleteMapping("/{tagId}")
     public Result deleteTag(@PathVariable Integer tagId){
@@ -57,6 +60,7 @@ public class TagController {
         tagService.deleteTag(tagId);
         return Result.success();
     }
+    @Log
     @AdminCheck
     @PutMapping()
     public Result updateTag(@RequestBody Tag param){
@@ -64,6 +68,7 @@ public class TagController {
         tagService.updateTag(param);
         return Result.success();
     }
+    @Log
     @AdminCheck
     @PostMapping("/music")
     public Result addTagForMusic(@RequestBody TagForSongParam param){
@@ -71,6 +76,7 @@ public class TagController {
         tagService.addTagForMusic(param);
         return Result.success();
     }
+    @Log
     @AdminCheck
     @DeleteMapping("/music")
     public Result deleteTagForMusic(@RequestBody TagForSongParam param){

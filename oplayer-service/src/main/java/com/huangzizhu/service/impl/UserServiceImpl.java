@@ -108,42 +108,23 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUserInfo(UpdateUserInfoParam param) {
-        //6. 更新用户信息Y --只能管理员账户或者本人
-        Integer idToCheck = param.getId();
-        checkPermission(idToCheck);
         try {
-            userMapper.updateUser(param);
-        }catch (DuplicateKeyException e){
-            throw new DuplicateValueException(e.getMessage(),e);
-        }
+            Integer affectRows = userMapper.updateUser(param);
+            if (affectRows == 0) throw new UserNotFoundException("用户不存在");
+        }catch (DuplicateKeyException e) {throw new DuplicateValueException(e.getMessage(),e);}
     }
 
     @Override
     public void deleteUser(Integer id) {
-        //7. 删除用户 --只能管理员账户
-        if(!CurrentHolder.getCurrentIsAdmin()){
-            CurrentHolder.removeAll();
-            throw new PermissionDenyException("无权限操作");
-        }
-        userMapper.deleteUser(id);
+        Integer affectRows = userMapper.deleteUser(id);
+        if (affectRows == 0) throw new UserNotFoundException("用户不存在");
     }
 
     @Override
     public void updatePassword(LoginParam param) {
-        //9. 修改密码--只能管理员账户或者本人
-        Integer idToCheck = param.getId();
-        checkPermission(idToCheck);
         hashPassword(param);
-        userMapper.updatePassword(param);
-    }
-
-    //只能管理员账户或者本人
-    private void checkPermission(Integer idToCheck) {
-        Integer idLogged = CurrentHolder.getCurrentId();
-        if(!idLogged.equals(idToCheck) && !CurrentHolder.getCurrentIsAdmin()){
-            CurrentHolder.removeAll();
-            throw new PermissionDenyException("无权限操作");
-        }
+        Integer affectRows = userMapper.updatePassword(param);
+        if (affectRows == 0) throw new UserNotFoundException("用户不存在");
     }
 
 

@@ -32,7 +32,12 @@ public class LogAspect {
         Object result = joinPoint.proceed(); // 执行目标方法
         long endTime = System.currentTimeMillis(); // 结束时间
         long costTime = endTime - startTime; // 计算耗时
-        OperationLog operateLog = CommonUtils.getOperateLog(joinPoint, result, costTime, ip, CurrentHolder.getCurrentId(), CurrentHolder.getCurrentIsAdmin() ? 2 : 1);
+        Integer id = CurrentHolder.getCurrentId();
+        Boolean isAdmin = CurrentHolder.getCurrentIsAdmin();
+        Integer operateType;
+        if(isAdmin != null) operateType = isAdmin  ? 2 : 1;
+        else operateType = 0;
+        OperationLog operateLog = CommonUtils.getOperateLog(joinPoint, result, costTime, ip, id, operateType);
         // 记录日志
         logMapper.insert(operateLog);
         return result;

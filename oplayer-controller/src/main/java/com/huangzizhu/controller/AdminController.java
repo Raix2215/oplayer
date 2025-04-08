@@ -1,6 +1,7 @@
 package com.huangzizhu.controller;
 
 import com.huangzizhu.annotion.AdminCheck;
+import com.huangzizhu.annotion.Log;
 import com.huangzizhu.pojo.*;
 import com.huangzizhu.pojo.user.Admin;
 import com.huangzizhu.pojo.user.AdminAddParam;
@@ -19,6 +20,7 @@ public class AdminController {
     @Autowired
     private AdminService adminService;
 
+    @Log
     @AdminCheck
     @PostMapping("/add")
     public Result addAdmin(@RequestBody AdminAddParam param) {
