@@ -16,7 +16,6 @@ public class UserInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String path = request.getRequestURI();
         // 拦截特定路径
-        if (path.contains("/users")) {
             log.info("拦截路径:{}", path);
             // 如果是登录和注册请求，直接放行
             if (request.getRequestURI().contains("/login") || request.getRequestURI().contains("/reg")){
@@ -50,7 +49,5 @@ public class UserInterceptor implements HandlerInterceptor {
                 return false;
             }
         }
-        return true; // 继续后续的处理
-    }
 
 }

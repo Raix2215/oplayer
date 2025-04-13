@@ -27,11 +27,11 @@ public interface UserMapper {
 
     List<SimpleUserInfo> fuzzySearchUser(String username);
 
-    void updateUser(UpdateUserInfoParam param);
+    Integer updateUser(UpdateUserInfoParam param);
 
-    void deleteUser(Integer id);
+    Integer deleteUser(Integer id);
 
-    void updatePassword(LoginParam param);
+    Integer updatePassword(LoginParam param);
 
     void addUserBehavior(UserBehavior userBehavior);
 
