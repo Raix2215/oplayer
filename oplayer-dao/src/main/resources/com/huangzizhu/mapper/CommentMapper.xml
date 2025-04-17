@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huangzizhu.mapper.CommentMapper">
+    <insert id="addComment">
+        insert into comment (song_id, user_id, txt, time, count, ip)
+        values (#{songId}, #{userId}, #{txt}, #{time}, #{count}, #{ip})
+    </insert>
+    <update id="like">
+        update comment
+        set count = #{count}
+        where id = #{id}
+    </update>
+    <delete id="deleteComment">
+        delete from comment
+        where id = #{id}
+    </delete>
+    <select id="getCommentById" resultType="com.huangzizhu.pojo.comment.Comment">
+        select * from comment where id = #{commentId}
+    </select>
+    <select id="getCountBySongId" resultType="java.lang.Integer">
+        select count(*) from comment where song_id = #{songId};
+    </select>
+    <select id="getCommentBySongId" resultType="com.huangzizhu.pojo.comment.Comment">
+        select * from comment
+                where song_id = #{songId}
+                order by count desc, time desc
+                limit #{start}, #{pageSize}
+    </select>
+    <select id="getCountByUserId" resultType="java.lang.Integer">
+        select count(*) from comment where user_id = #{userId};
+    </select>
+    <select id="getCommentByUserId" resultType="com.huangzizhu.pojo.comment.Comment">
+        select * from comment
+                where user_id = #{userId}
+                order by count desc, time desc
+                limit #{start}, #{pageSize}
+    </select>
+</mapper>

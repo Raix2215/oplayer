@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huangzizhu.mapper.HistoryMapper">
+    <insert id="addHistory">
+        insert into play_history
+        (user_id, song_id, progress, ip, play_mode, volume, is_paused, play_time, list_id, list_type)
+        values (#{userId}, #{songId}, #{progress}, #{ip}, #{playMode}, #{volume}, #{isPaused}, #{playTime}, #{listId}, #{listType})
+    </insert>
+    <select id="getHistoryCount" resultType="java.lang.Integer">
+        select count(*)
+        from play_history
+        where user_id = #{userId}
+    </select>
+    <select id="getHistory" resultType="com.huangzizhu.pojo.history.PlayHistory">
+        select song_id, progress, ip, play_mode, volume, is_paused, play_time, list_id, list_type
+        from play_history
+        where user_id = #{userId}
+        order by play_time desc
+        limit #{start},#{pageSize}
+    </select>
+</mapper>

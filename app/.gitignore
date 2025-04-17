@@ -20,7 +20,6 @@ target/
 *.ipr
 *.yml
 
-
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
@@ -33,7 +32,3 @@ build/
 
 ### VS Code ###
 .vscode/
-
-### Local data ###
-*.yum
-/music

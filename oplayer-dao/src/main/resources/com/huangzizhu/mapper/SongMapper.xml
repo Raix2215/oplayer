@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huangzizhu.mapper.SongMapper">
+    <insert id="addSong">
+        insert into song
+            (name, artist, album_id,album_name, year, duration, format
+            , size, bit_rate, sample_rate, path, md5,is_available)
+        values (#{name}, #{artist}, #{albumId},#{albumName}, #{year}, #{duration}, #{format}
+            , #{size}, #{bitRate}, #{sampleRate}, #{path}, #{md5},#{isAvailable})
+    </insert>
+    <insert id="addSongs">
+        insert into song
+        (name, artist, album_id,album_name ,year, duration, format
+        , size, bit_rate, sample_rate, path, md5, is_available)
+        values
+        <foreach collection="songsToAdd" item="song" separator=",">
+            (#{song.name}, #{song.artist}, #{song.albumId},#{song.albumName} ,#{song.year}, #{song.duration}, #{song.format}
+            , #{song.size}, #{song.bitRate}, #{song.sampleRate}, #{song.path}, #{song.md5}, #{song.isAvailable})
+        </foreach>
+    </insert>
+    <update id="markInvalid">
+        update song set is_available = 0 where md5 in
+        <foreach collection="list" item="md5" separator="," open="(" close=")">
+            #{md5}
+        </foreach>
+    </update>
+    <update id="updateSong">
+        update song set
+            name = #{name},
+            artist = #{artist},
+            album_id = #{albumId},
+            album_name = #{albumName},
+            year = #{year},
+            duration = #{duration},
+            format = #{format},
+            size = #{size},
+            cover_url = #{coverUrl},
+            bit_rate = #{bitRate},
+            sample_rate = #{sampleRate},
+            path = #{path},
+            is_available = #{isAvailable}
+        where md5 = #{md5}
+    </update>
+    <delete id="deleteSongs">
+        delete from song where md5 in
+        <foreach collection="list" item="md5" separator="," open="(" close=")">
+            #{md5}
+        </foreach>
+    </delete>
+
+    <select id="getAllMD5" resultType="java.lang.String">
+        select md5 from song where is_available = 1;
+    </select>
+    <select id="getMD5sNotExist" resultType="java.lang.String" parameterType="list" >
+        SELECT t.md5_value
+        FROM (
+        <foreach collection="list" item="md5" separator=" UNION ALL ">
+            SELECT #{md5} AS md5_value
+        </foreach>
+        ) AS t
+        LEFT JOIN song s ON t.md5_value = s.md5
+        WHERE s.md5 IS NULL
+    </select>
+    <select id="getSongByMD5" resultType="java.lang.String">
+        select path from song where md5 = #{md5} and is_available = 1;
+    </select>
+    <select id="getTotal" resultType="java.lang.Integer">
+        select count(*) from song
+            <where>
+                <if test="name != null and name != ''">
+                    and name like concat('%', #{name}, '%')
+                </if>
+                <if test="artist != null and artist != ''">
+                    and artist like concat('%', #{artist}, '%')
+                </if>
+            </where>
+    </select>
+    <select id="getAllMusic" resultType="com.huangzizhu.pojo.Song">
+        select id, name, artist, album_id, album_name, year, duration, format, size, cover_url, bit_rate, sample_rate, md5, is_available from song
+        <where>
+            <if test="name != null and name != ''">
+                and name like concat('%', #{name}, '%')
+            </if>
+            <if test="artist != null and artist != ''">
+                and artist like concat('%', #{artist}, '%')
+            </if>
+        </where>
+        limit #{start}, #{pageSize}
+    </select>
+    <select id="getMusicById" resultType="com.huangzizhu.pojo.Song">
+        select id, name, artist, album_id, album_name, year, duration, format, size, cover_url, bit_rate, sample_rate, md5, is_available from song
+        where id = #{id}
+    </select>
+    <select id="fuzzySearch" resultType="com.huangzizhu.pojo.music.SimpleMusicInfo">
+        select id,name,artist from song where name like concat('%', #{name}, '%') or artist like concat('%', #{name}, '%') and is_available = 1 limit 0,10
+    </select>
+    <select id="getMusicDuration" resultType="java.lang.Integer">
+        select duration from song where id = #{id}
+    </select>
+    <select id="getMusicCountByTagId" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM song s
+                JOIN song_tag st ON s.id = st.song_id
+        WHERE st.tag_id = #{tagId}
+    </select>
+    <select id="getMusicByTagId" resultType="com.huangzizhu.pojo.Song">
+        SELECT s.*
+        FROM `song` s
+                 JOIN `song_tag` st ON s.id = st.song_id
+        WHERE st.tag_id = #{tagId}
+        limit #{start}, #{pageSize}
+    </select>
+    <select id="getMusicCount" resultType="java.lang.Integer">
+        select count(*) from song
+                 where name like concat('%', #{name}, '%')
+                    or artist like concat('%', #{artist}, '%)')
+    </select>
+    <select id="getMusic" resultType="com.huangzizhu.pojo.Song">
+        select * from song
+        where name like concat('%', #{name}, '%')
+           or artist like concat('%', #{artist}, '%)')
+        limit #{start}, #{pageSize}
+    </select>
+    <select id="getMusicCountByName" resultType="java.lang.Integer">
+        select count(*) from song
+        where name like concat('%', #{name}, '%')
+    </select>
+    <select id="getMusicByName" resultType="com.huangzizhu.pojo.Song">
+        select * from song
+        where name like concat('%', #{name}, '%')
+        limit #{start}, #{pageSize}
+    </select>
+    <select id="getMusicCountByArtist" resultType="java.lang.Integer">
+        select count(*) from song
+        where artist like concat('%', #{artist}, '%')
+    </select>
+    <select id="getMusicByArtist" resultType="com.huangzizhu.pojo.Song">
+        select * from song
+        where artist like concat('%', #{artist}, '%')
+        limit #{start}, #{pageSize}
+    </select>
+    <select id="getMusicCountByNameAndArtist" resultType="java.lang.Integer">
+        select count(*) from song
+        where name like concat('%', #{name}, '%') and
+              artist like concat('%', #{artist}, '%')
+    </select>
+    <select id="getMusicByNameAndArtist" resultType="com.huangzizhu.pojo.Song">
+        select * from song
+        where name like concat('%', #{name}, '%') and
+            artist like concat('%', #{artist}, '%')
+        limit #{start},#{pageSize}
+    </select>
+</mapper>
