@@ -109,6 +109,13 @@ public class GlobalExceptionHandler {
         log.error("邮件异常", e);
         return Result.error(e.getMessage());
     }
+    //处理验证码异常
+    @ExceptionHandler
+    public Result handleException(CaptchaException e) {
+        log.error("验证码异常", e);
+        return Result.error(e.getMessage());
+    }
+
 
 
 

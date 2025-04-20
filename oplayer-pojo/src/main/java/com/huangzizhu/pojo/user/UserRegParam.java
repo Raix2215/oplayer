@@ -13,5 +13,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserRegParam extends User {
+    private String uuid;
+    private String imageCode;
+    private String emailCode;
     private String ip;
 }

@@ -1,10 +1,14 @@
 package com.huangzizhu.service;
 
+import com.huangzizhu.exception.CaptchaException;
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+@Slf4j
 public class ImageCaptchaManager {
     // 存储邮箱、验证码和生成时间
     private static final ConcurrentHashMap<String, CodeInfo> codeMap = new ConcurrentHashMap<>();
@@ -15,7 +19,7 @@ public class ImageCaptchaManager {
 
     private ImageCaptchaManager() {
         // 初始化定时任务，每分钟清理一次过期验证码
-        scheduler.scheduleAtFixedRate(this::cleanExpiredCodes, 0, 1, TimeUnit.MINUTES);
+        scheduler.scheduleAtFixedRate(this::cleanExpiredCodes, 0, CODE_EXPIRATION_TIME, TimeUnit.MINUTES);
     }
 
     public static ImageCaptchaManager getInstance() {
@@ -36,17 +40,19 @@ public class ImageCaptchaManager {
 
     // 验证验证码
     public boolean verifyCode(String uuid,String code) {
-        String rightCode = codeMap.get(uuid).getCode();
-        if (code != null && code.equals(rightCode)) {
-            // 验证成功后移除验证码
-            codeMap.remove(uuid);
-            return true;
+        String rightCode = null;
+        try {
+            rightCode = codeMap.get(uuid).getCode();
+        } catch (Exception e) {
+            throw new CaptchaException("验证码已过期或不存在", e);
         }
-        return false;
+
+        return code != null && code.equals(rightCode);
     }
 
     // 清理过期验证码
     private void cleanExpiredCodes() {
+        log.info("清理过期图形验证码");
         long currentTime = System.currentTimeMillis();
         codeMap.forEach((email, codeInfo) -> {
             if (currentTime - codeInfo.getCreateTime() > CODE_EXPIRATION_TIME * 60 * 1000) {

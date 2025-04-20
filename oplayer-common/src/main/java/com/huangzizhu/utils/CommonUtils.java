@@ -9,6 +9,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import java.io.File;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CommonUtils {
@@ -84,5 +85,17 @@ public class CommonUtils {
         operateLog.setReturnValue(result.toString()); // 设置返回值
         operateLog.setCostTime(costTime); // 设置耗时
         return operateLog;
+    }
+    // 定义邮箱的正则表达式
+    private static final String EMAIL_REGEX = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+
+    // 验证邮箱是否合法的函数
+    public static boolean isValidEmail(String email) {
+        // 编译正则表达式
+        Pattern pattern = Pattern.compile(EMAIL_REGEX);
+        // 匹配邮箱字符串
+        Matcher matcher = pattern.matcher(email);
+        // 返回匹配结果
+        return matcher.matches();
     }
 }
