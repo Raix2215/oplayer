@@ -66,4 +66,7 @@
     <select id="fuzzySearchUser" resultType="com.huangzizhu.pojo.user.SimpleUserInfo">
         select id,username from user where username like concat('%',#{username},'%')
     </select>
+    <select id="getUserBehavior" resultType="com.huangzizhu.pojo.user.UserBehavior">
+        select * from user_behavior where user_id = #{id}
+    </select>
 </mapper>

@@ -5,25 +5,36 @@ import com.huangzizhu.annotion.Log;
 import com.huangzizhu.exception.CaptchaException;
 import com.huangzizhu.exception.EmailException;
 import com.huangzizhu.exception.FIleException;
+import com.huangzizhu.mapper.SentenceMapper;
+import com.huangzizhu.pojo.Says;
 import com.huangzizhu.pojo.SendEmailParam;
+import com.huangzizhu.pojo.WeatherInfo;
 import com.huangzizhu.service.EmailCaptchaManager;
+import com.huangzizhu.service.GaodeService;
 import com.huangzizhu.service.ImageCaptchaManager;
 import com.huangzizhu.service.OtherService;
 import com.huangzizhu.utils.AliOSSOperator;
 import com.huangzizhu.utils.CommonUtils;
-import jakarta.servlet.http.HttpSession;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.awt.image.BufferedImage;
+import java.util.Random;
 import java.util.UUID;
 
+@Slf4j
 @Service
 public class OtherServiceImpl implements OtherService {
     @Autowired AliOSSOperator aliOSSOperator;
     @Autowired
     Producer kaptchaProducer;
+    @Autowired
+    SentenceMapper sentenceMapper;
+    @Autowired
+    GaodeService gaodeService;
+    private Random random = new Random();
     @Log
     @Override
     public String uploadImg(MultipartFile file) {
@@ -62,5 +73,27 @@ public class OtherServiceImpl implements OtherService {
         } catch (Exception e) {
             throw new EmailException("发送邮件失败", e);
         }
+    }
+
+    @Override
+    public Says getSays() {
+        Integer total = sentenceMapper.getCount();
+        if (total == null || total == 0) {
+            throw new RuntimeException("没有可用的句子");
+        }
+        int randId = random.nextInt(total) + 1;
+        return sentenceMapper.getSays(randId);
+    }
+
+    @Override
+    public WeatherInfo getWeather(String ip) {
+        log.info("ip:{}",ip);
+        WeatherInfo weatherInfo = null;
+        try {
+            weatherInfo = gaodeService.getWeatherInfo(ip);
+        } catch (Exception e) {
+            throw new RuntimeException("获取天气信息失败",e);
+        }
+        return weatherInfo;
     }
 }

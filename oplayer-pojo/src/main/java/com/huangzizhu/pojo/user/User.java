@@ -26,4 +26,5 @@ public class User extends PasswordAndSalt {
     private String description; // 个人签名
     private String background; // 个人空间背景图
     private LocalDateTime regTime; // 注册时间
+    private UserBehavior userBehavior; // 用户行为（如登录次数、最后登录时间等）
 }
