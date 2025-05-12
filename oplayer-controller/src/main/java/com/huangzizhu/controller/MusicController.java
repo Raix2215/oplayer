@@ -20,6 +20,7 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -100,4 +101,19 @@ public class MusicController {
         return Result.success();
     }
 
+    @PostMapping("/recommend")
+    public Result getRecommendMusic( @RequestBody Map<String, Object> body) {
+        Integer count = (Integer) body.get("count");
+        log.info("获取推荐音乐: {}", count);
+        QueryResult<Song> data = songService.getRecommendMusic(count);
+        return Result.success(data);
+    }
+
+    @PostMapping("/recommend/daily")
+    public Result getDailyRecommendMusic(@RequestBody Map<String, Object> body) {
+        Integer userId = (Integer) body.get("userId");
+        log.info("获取每日推荐音乐: {}", userId);
+        QueryResult<Song> data = songService.getDailyMusic(userId);
+        return Result.success(data);
+    }
 }

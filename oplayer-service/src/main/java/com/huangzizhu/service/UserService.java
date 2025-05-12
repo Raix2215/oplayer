@@ -26,4 +26,6 @@ public interface UserService {
     void deleteUser(Integer id);
 
     void updatePassword(LoginParam param);
+
+    User getUserStatus();
 }

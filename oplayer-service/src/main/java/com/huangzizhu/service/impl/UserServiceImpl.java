@@ -6,7 +6,10 @@ import com.huangzizhu.mapper.UserMapper;
 import com.huangzizhu.pojo.*;
 import com.huangzizhu.pojo.collection.Collection;
 import com.huangzizhu.pojo.user.*;
+import com.huangzizhu.service.EmailCaptchaManager;
+import com.huangzizhu.service.ImageCaptchaManager;
 import com.huangzizhu.service.UserService;
+import com.huangzizhu.utils.CommonUtils;
 import com.huangzizhu.utils.CurrentHolder;
 import com.huangzizhu.utils.HashWithSalt;
 import com.huangzizhu.utils.JWTUtil;
@@ -47,6 +50,10 @@ public class UserServiceImpl implements UserService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void regUser(UserRegParam param) {
+        //验证图形验证码
+        if(!ImageCaptchaManager.getInstance().verifyCode(param.getUuid(), param.getImageCode())) throw new CaptchaException("图形验证码错误");
+        //验证邮箱验证码
+        if(!EmailCaptchaManager.getInstance().verifyCode(param.getEmail(), param.getEmailCode())) throw new CaptchaException("邮箱验证码错误");
         //对密码进行哈希加盐，记录哈希后的密码和盐值
         hashPassword(param);
         //将用户信息插入数据库
@@ -69,6 +76,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public LoginResult<User> login(LoginParam param) {
+        //验证图形验证码
+        if(!ImageCaptchaManager.getInstance().verifyCode(param.getUuid(), param.getCaptcha())) throw new CaptchaException("图形验证码错误");
         //判断用户是否存在
         User user = userMapper.getUser(param.getUsername());
         if(user == null){
@@ -94,10 +103,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserById(Integer id) {
-        User user = userMapper.getUserById(id);
-        if(user == null){
-            throw new UserNotFoundException("用户不存在，检查id是否正确");
-        }
+        User user = checkUser(id);
+        //获取用户行为信息
+        UserBehavior userBehavior = userMapper.getUserBehavior(user.getId());
+        user.setUserBehavior(userBehavior);
         return user;
     }
 
@@ -108,6 +117,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUserInfo(UpdateUserInfoParam param) {
+        if(!CommonUtils.isValidEmail(param.getEmail())) throw new EmailException("邮箱格式错误");
         try {
             Integer affectRows = userMapper.updateUser(param);
             if (affectRows == 0) throw new UserNotFoundException("用户不存在");
@@ -122,9 +132,38 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updatePassword(LoginParam param) {
+        User user = checkUser(param);
+        //检查是否是本人邮箱
+        if(!user.getEmail().equals(param.getEmail())) throw new EmailException("邮箱不匹配");
+        //检查邮箱验证码
+        if(!EmailCaptchaManager.getInstance().verifyCode(param.getEmail(), param.getEmailCode())) throw new CaptchaException("邮箱验证码错误");
         hashPassword(param);
         Integer affectRows = userMapper.updatePassword(param);
         if (affectRows == 0) throw new UserNotFoundException("用户不存在");
+    }
+
+    @Override
+    public User getUserStatus() {
+        //通过token获取用户id
+        Integer id = CurrentHolder.getCurrentId();
+        User user = checkUser(id);
+        //获取用户行为信息
+        UserBehavior userBehavior = userMapper.getUserBehavior(user.getId());
+        user.setUserBehavior(userBehavior);
+        return user;
+    }
+
+    private User checkUser(Integer id) {
+        if(id == null) throw new UserNotFoundException("用户不存在");
+        User user = userMapper.getUserById(id);
+        if(user == null) throw new UserNotFoundException("用户不存在");
+        return user;
+    }
+
+    private User checkUser(LoginParam param) {
+        User user = userMapper.getUserById(param.getId());
+        if(user == null) throw new UserNotFoundException("用户不存在");
+        return user;
     }
 
 

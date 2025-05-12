@@ -56,6 +56,11 @@
             <artifactId>lombok</artifactId>
         </dependency>
         <!--        阿里云oss到此结束-->
+<!--        阿里云邮件-->
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>dm20151123</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -63,6 +68,12 @@
         <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjweaver</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+            <version>3.5.17</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 

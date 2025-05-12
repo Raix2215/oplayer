@@ -18,8 +18,8 @@ public class UserInterceptor implements HandlerInterceptor {
         // 拦截特定路径
             log.info("拦截路径:{}", path);
             // 如果是登录和注册请求，直接放行
-            if (request.getRequestURI().contains("/login") || request.getRequestURI().contains("/reg")){
-                log.info("login/reg, 放行");
+            if (request.getRequestURI().contains("/login") || request.getRequestURI().contains("/reg") || request.getRequestURI().contains("/tool")){
+                log.info("login/reg/tool, 放行");
                 return true;
             }
             // 如果是其他请求，判断是否有token
