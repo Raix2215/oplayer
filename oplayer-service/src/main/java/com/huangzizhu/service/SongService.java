@@ -40,4 +40,8 @@ public interface SongService {
     QueryResult<Song> getMusic(MusicQueryForm param);
 
     void uploadMusic(MultipartFile file);
+
+    QueryResult<Song> getRecommendMusic(Integer count);
+
+    QueryResult<Song> getDailyMusic(Integer userId);
 }

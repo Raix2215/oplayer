@@ -1,7 +1,8 @@
 package com.huangzizhu.service;
 
+import com.huangzizhu.pojo.Says;
 import com.huangzizhu.pojo.SendEmailParam;
-import jakarta.servlet.http.HttpSession;
+import com.huangzizhu.pojo.WeatherInfo;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.awt.image.BufferedImage;
@@ -12,4 +13,8 @@ public interface OtherService {
     BufferedImage getCaptchaImage(String uuid);
 
     void sendEmail(SendEmailParam param);
+
+    Says getSays();
+
+    WeatherInfo getWeather(String ip);
 }

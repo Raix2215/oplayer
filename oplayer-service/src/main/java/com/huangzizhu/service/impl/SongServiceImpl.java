@@ -1,12 +1,10 @@
 package com.huangzizhu.service.impl;
 
-import com.huangzizhu.exception.FIleException;
-import com.huangzizhu.exception.GetMusicResourceException;
-import com.huangzizhu.exception.OperateMusicToLIstFailException;
-import com.huangzizhu.exception.ParamInvalidException;
+import com.huangzizhu.exception.*;
 import com.huangzizhu.mapper.AlbumMapper;
 import com.huangzizhu.mapper.SongMapper;
 import com.huangzizhu.mapper.TagMapper;
+import com.huangzizhu.mapper.UserMapper;
 import com.huangzizhu.pojo.Album;
 import com.huangzizhu.pojo.QueryResult;
 import com.huangzizhu.pojo.Song;
@@ -14,6 +12,7 @@ import com.huangzizhu.pojo.config.FileWatcherProperties;
 import com.huangzizhu.pojo.music.MusicQueryForm;
 import com.huangzizhu.pojo.music.SimpleMusicInfo;
 import com.huangzizhu.pojo.tag.Tag;
+import com.huangzizhu.pojo.user.User;
 import com.huangzizhu.service.SongService;
 import com.huangzizhu.service.TagService;
 import com.huangzizhu.utils.CommonUtils;
@@ -35,10 +34,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Slf4j
 @Service
+
 public class SongServiceImpl implements SongService {
 
     @Autowired
@@ -49,6 +50,8 @@ public class SongServiceImpl implements SongService {
     private TagMapper tagMapper;
     @Autowired
     private FileWatcherProperties fileWatcherProperties;
+    @Autowired
+    private UserMapper userMapper;
 
 
 
@@ -257,6 +260,61 @@ public class SongServiceImpl implements SongService {
         } catch (IOException e) {
             throw new FIleException("文件上传失败!", e);
         }
+    }
+
+    @Override
+    public QueryResult<Song> getRecommendMusic(Integer count) {
+        if(count == null) throw new ParamInvalidException("参数不能为空");
+        if(count <= 0) throw new ParamInvalidException("参数有误:"+count);
+        if(count > 100) count = 100;
+        //获取id列表
+        List<Integer> ids = songMapper.getAllIds();
+        //随机获取count个id
+        if(ids.size() <= count) count = ids.size();
+        Collections.shuffle(ids);
+        //新的idList
+        List<Integer> newIds = ids.subList(0, count);
+        //获取歌曲列表
+        List<Song> songs = songMapper.getRandomMusic(newIds);
+        Integer total = songs.size();
+        return new QueryResult<>(total, songs);
+    }
+
+    @Override
+    public QueryResult<Song> getDailyMusic(Integer userId) {
+        checkUser(userId);
+        //获取id列表
+        List<Integer> ids = songMapper.getAllIds();
+        int count = 30;
+        //随机获取count个id
+        if(ids.size() <= 30) count = ids.size();
+        Collections.shuffle(ids,getRandomByUserAndDay(userId));
+        //新的idList
+        List<Integer> newIds = ids.subList(0, count);
+        //获取歌曲列表
+        List<Song> songs = songMapper.getRandomMusic(newIds);
+        Integer total = songs.size();
+        return new QueryResult<>(total, songs);
+    }
+
+    private Random getRandomByUserAndDay(Integer userId) {
+        //根据用户id和日期生成随机数种子
+        LocalDateTime now = LocalDateTime.now();
+        StringBuilder sb = new StringBuilder();
+        int seed = sb
+                .append(userId)
+                .append("-").append(now.getYear())
+                .append("-").append(now.getMonthValue())
+                .append("-").append(now.getDayOfMonth())
+                .toString().hashCode();
+        return new Random(seed);
+    }
+
+    private User checkUser(Integer id) {
+        if(id == null) throw new UserNotFoundException("用户不存在");
+        User user = userMapper.getUserById(id);
+        if(user == null) throw new UserNotFoundException("用户不存在");
+        return user;
     }
 
     private preProcess getPreProcess(List<Song> songs) {

@@ -159,7 +159,7 @@ public class MusicFileParser {
         if (artwork != null) {
             byte[] imageData = artwork.getBinaryData();
             try {
-                return new AliOSSOperator().uploadFile(imageData, name);
+                return new AliOSSOperator().uploadFile(imageData, name+".jpg");
             } catch (ClientException e) {
                 throw new MusicParseException("阿里云上传封面出现异常", path, e);
             }

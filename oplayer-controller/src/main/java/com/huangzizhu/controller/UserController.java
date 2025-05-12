@@ -89,4 +89,11 @@ public class UserController {
         return Result.success();
     }
 
+    @GetMapping("/status")
+    public Result getUserStatus() {
+        log.info("查询用户状态");
+        User data = userService.getUserStatus();
+        return Result.success(data);
+    }
+
 }

@@ -103,10 +103,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserById(Integer id) {
-        User user = userMapper.getUserById(id);
-        if(user == null){
-            throw new UserNotFoundException("用户不存在，检查id是否正确");
-        }
+        User user = checkUser(id);
+        //获取用户行为信息
+        UserBehavior userBehavior = userMapper.getUserBehavior(user.getId());
+        user.setUserBehavior(userBehavior);
         return user;
     }
 
@@ -140,6 +140,24 @@ public class UserServiceImpl implements UserService {
         hashPassword(param);
         Integer affectRows = userMapper.updatePassword(param);
         if (affectRows == 0) throw new UserNotFoundException("用户不存在");
+    }
+
+    @Override
+    public User getUserStatus() {
+        //通过token获取用户id
+        Integer id = CurrentHolder.getCurrentId();
+        User user = checkUser(id);
+        //获取用户行为信息
+        UserBehavior userBehavior = userMapper.getUserBehavior(user.getId());
+        user.setUserBehavior(userBehavior);
+        return user;
+    }
+
+    private User checkUser(Integer id) {
+        if(id == null) throw new UserNotFoundException("用户不存在");
+        User user = userMapper.getUserById(id);
+        if(user == null) throw new UserNotFoundException("用户不存在");
+        return user;
     }
 
     private User checkUser(LoginParam param) {

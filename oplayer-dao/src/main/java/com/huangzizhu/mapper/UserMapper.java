@@ -36,4 +36,6 @@ public interface UserMapper {
     void addUserBehavior(UserBehavior userBehavior);
 
     void setLastLoginTime(Integer userId, LocalDateTime lastLoginTime);
+
+    UserBehavior getUserBehavior(Integer id);
 }

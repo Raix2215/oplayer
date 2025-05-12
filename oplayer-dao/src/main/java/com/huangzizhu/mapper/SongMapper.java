@@ -49,4 +49,8 @@ public interface SongMapper {
     Integer getMusicCountByNameAndArtist(MusicQueryForm param);
 
     List<Song> getMusicByNameAndArtist();
+
+    List<Integer> getAllIds();
+
+    List<Song> getRandomMusic(List<Integer> newIds);
 }

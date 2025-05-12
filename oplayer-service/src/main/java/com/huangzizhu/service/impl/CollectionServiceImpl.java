@@ -69,7 +69,7 @@ public class CollectionServiceImpl implements CollectionService {
             Integer affectRows = collectionMapper.deleteMusic(collection.getId(), song.getId());
             if(affectRows == 0){
                 throw new OperateMusicToLIstFailException("歌曲不在收藏列表中");
-            }
+            }   
             //更新collection表的信息
             collection.setTotal(CommonUtils.max(collection.getTotal()-1,0));
             collection.setDuration(CommonUtils.max(collection.getDuration()-song.getDuration(),0));
