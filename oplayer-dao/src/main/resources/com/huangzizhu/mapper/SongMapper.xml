@@ -154,7 +154,8 @@
         select id from song where is_available = 1;
     </select>
     <select id="getRandomMusic" resultType="com.huangzizhu.pojo.Song">
-        select id, name, artist, album_id, album_name, year, duration, format, size, cover_url, bit_rate, sample_rate, md5, is_available from song where is_available = 1
+        select id, name, artist, album_id, album_name, year, duration, format, size, cover_url, bit_rate, sample_rate, md5, is_available
+        from song where is_available = 1
         and id in
         <foreach collection="newIds" item="id" separator="," open="(" close=")">
         #{id}
