@@ -269,6 +269,7 @@ public class SongServiceImpl implements SongService {
         if(count > 100) count = 100;
         //获取id列表
         List<Integer> ids = songMapper.getAllIds();
+        if(ids.size() <=0) return new QueryResult<>(0, new ArrayList<>());
         //随机获取count个id
         if(ids.size() <= count) count = ids.size();
         Collections.shuffle(ids);

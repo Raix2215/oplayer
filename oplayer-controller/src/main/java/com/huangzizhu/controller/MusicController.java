@@ -57,7 +57,6 @@ public class MusicController {
         if (!resource.exists()) {
             return ResponseEntity.notFound().build();
         }
-
         // 处理范围请求(支持断点续传)
         if (rangeHeader != null && rangeHeader.startsWith("bytes=")) {
             return songService.handlePartialContent(resource, rangeHeader);

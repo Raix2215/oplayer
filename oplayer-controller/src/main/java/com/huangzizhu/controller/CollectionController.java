@@ -59,4 +59,11 @@ public class CollectionController {
         QueryResult<Song> data = collectionService.getSongs(param);
         return Result.success(data);
     }
+
+    @GetMapping("/music/in/{uid}")
+    public Result getMusicIdInCollection(@PathVariable Integer uid) {
+        log.info("获取收藏列表中的歌曲id: {}", uid);
+        QueryResult<Integer> data = collectionService.getMusicIdInCollection(uid);
+        return Result.success(data);
+    }
 }

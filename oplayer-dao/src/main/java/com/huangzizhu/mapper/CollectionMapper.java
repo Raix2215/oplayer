@@ -3,6 +3,7 @@ package com.huangzizhu.mapper;
 
 import com.huangzizhu.pojo.collection.Collection;
 import com.huangzizhu.pojo.Song;
+import com.huangzizhu.pojo.collection.CollectionQueryForm;
 import com.huangzizhu.pojo.collection.UpdateCollectionParam;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
@@ -22,11 +23,15 @@ public interface CollectionMapper {
 
     Collection getCollection(Integer userId);
 
-    List<Song> getSongs(Integer collectionId);
+
 
     Integer deleteMusic(Integer collectionId, Integer songId);
 
     void updateCollection(Collection collection);
 
     void updateCollectionInfo(Collection collection);
+
+    List<Song> getSongs(Integer id, CollectionQueryForm param);
+
+    List<Integer> getMusicIdInCollection(Integer collectionId);
 }
