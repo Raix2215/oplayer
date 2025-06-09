@@ -101,8 +101,16 @@ public class CollectionServiceImpl implements CollectionService {
     public QueryResult<Song> getSongs(CollectionQueryForm param) {
         Collection collection = checkCollection(param.getUserId());
         Integer total = collection.getTotal();
-        List<Song> list = collectionMapper.getSongs(collection.getId());
+        param.setStart(param.getPageSize()*(param.getPage()-1));
+        List<Song> list = collectionMapper.getSongs(collection.getId(),param);
         return new QueryResult<>(total,list);
+    }
+
+    @Override
+    public QueryResult<Integer> getMusicIdInCollection(Integer uid) {
+        Collection collection = checkCollection(uid);
+        List<Integer> list = collectionMapper.getMusicIdInCollection(collection.getId());
+        return new QueryResult<>(list.size(),list);
     }
 
     private Collection checkCollection(Integer id) {

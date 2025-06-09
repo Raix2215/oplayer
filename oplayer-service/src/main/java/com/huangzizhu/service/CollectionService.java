@@ -17,4 +17,6 @@ public interface CollectionService {
     void updateCollection(UpdateCollectionParam param);
 
     QueryResult<Song> getSongs(CollectionQueryForm param);
+
+    QueryResult<Integer> getMusicIdInCollection(Integer uid);
 }
